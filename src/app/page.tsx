@@ -67,7 +67,8 @@ export default function Home() {
               Certificate workspace
             </p>
 
-<h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">              Create certificates
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">
+              Create certificates
             </h2>
 
             <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
@@ -75,6 +76,7 @@ export default function Home() {
               template and participant list.
             </p>
           </div>
+
           <StepIndicator />
 
           {/* Workflow */}
@@ -95,10 +97,9 @@ export default function Home() {
 
             {/* Step 03 */}
             <ParticipantsUpload
-              file={participantsFile}
               participants={participants}
-              onFileChange={setParticipantsFile}
               onParticipantsChange={setParticipants}
+              onFileChange={setParticipantsFile}
             />
 
             {/* Generation checklist */}

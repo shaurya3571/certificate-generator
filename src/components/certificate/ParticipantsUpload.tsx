@@ -1,85 +1,78 @@
 "use client";
 
-import CsvUploader from "@/components/certificate/CsvUploader";
-import ParticipantPreview from "@/components/certificate/ParticipantPreview";
+import { useState } from "react";
+
+import { parseParticipantsCsv } from "@/lib/csv/parser";
 import type { Participant } from "@/types/certificate";
+import CsvUploader from "./CsvUploader";
+import ParticipantPreview from "./ParticipantPreview";
 
 interface ParticipantsUploadProps {
-  file: File | null;
   participants: Participant[];
-  onFileChange: (file: File | null) => void;
   onParticipantsChange: (participants: Participant[]) => void;
+  onFileChange?: (file: File | null) => void;
 }
 
 export default function ParticipantsUpload({
-  file,
   participants,
-  onFileChange,
   onParticipantsChange,
-}: ParticipantsUploadProps) {
-  const handleFileChange = (newFile: File | null) => {
-    onFileChange(newFile);
+  onFileChange,
+}: ParticipantsUploadProps) { 
+  const [errors, setErrors] = useState<string[]>([]);
+  const [isParsing, setIsParsing] = useState(false);
 
-    // When the CSV is removed, clear its participant preview.
-    if (!newFile) {
+  const handleFileChange = async (file: File | null) => {
+    onFileChange?.(file);
+
+    setErrors([]);
+    onParticipantsChange([]);
+
+    if (!file) {
+      return;
+    }
+
+    setIsParsing(true);
+
+    try {
+      const result = await parseParticipantsCsv(file);
+
+      onParticipantsChange(result.participants);
+      setErrors(result.errors);
+    } catch {
       onParticipantsChange([]);
+      setErrors(["Unable to process the CSV file."]);
+    } finally {
+      setIsParsing(false);
     }
   };
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      {/* Section heading */}
-      <div className="mb-6 flex items-start gap-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-semibold text-slate-700">
-          03
-        </div>
+    <div className="space-y-6">
+      <CsvUploader 
+        file={null}
+        onFileChange={handleFileChange} />
 
-        <div>
-          <h3 className="text-lg font-semibold text-slate-900">
-            Participants
-          </h3>
+      {isParsing && (
+        <p className="text-sm text-gray-500">
+          Processing participant CSV...
+        </p>
+      )}
 
-          <p className="mt-1 text-sm text-slate-500">
-            Upload the CSV containing the participants who should receive
-            certificates.
+      {errors.length > 0 && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="mb-2 text-sm font-semibold text-red-700">
+            Please check your CSV
           </p>
+
+          <ul className="space-y-1 text-sm text-red-600">
+            {errors.map((error, index) => (
+              <li key={`${error}-${index}`}>{error}</li>
+            ))}
+          </ul>
         </div>
-      </div>
+      )}
 
-      {/* CSV format information */}
-      <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <p className="text-sm font-medium text-slate-800">
-          Required CSV columns
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-md bg-white px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-200">
-            name
-          </span>
-
-          <span className="rounded-md bg-white px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-200">
-            email
-          </span>
-        </div>
-
-        <p className="mt-3 text-xs leading-5 text-slate-500">
-          Example:{" "}
-          <code className="rounded bg-white px-1 py-0.5 text-slate-700">
-            name,email
-          </code>
-        </p>
-      </div>
-
-      {/* CSV uploader */}
-      <CsvUploader
-        file={file}
-        onFileChange={handleFileChange}
-      />
-
-      {/* Participant preview */}
-      <div className="mt-5">
-        <ParticipantPreview participants={participants} />
-      </div>
-    </section>
+      <ParticipantPreview participants={participants} />
+    </div>
   );
 }
