@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import EventDetails from "@/components/certificate/EventDetails";
+import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
@@ -12,7 +13,10 @@ export default function Home() {
   const [eventName, setEventName] = useState("");
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateType | null>(null);
-  const [customTemplate, setCustomTemplate] = useState<File | null>(null);
+  const [customTemplate, setCustomTemplate] =
+    useState<File | null>(null);
+  const [participantsFile, setParticipantsFile] =
+    useState<File | null>(null);
 
   return (
     <>
@@ -46,6 +50,11 @@ export default function Home() {
               customTemplate={customTemplate}
               onTemplateChange={setSelectedTemplate}
               onCustomTemplateChange={setCustomTemplate}
+            />
+
+            <ParticipantsUpload
+              file={participantsFile}
+              onFileChange={setParticipantsFile}
             />
           </div>
         </section>
