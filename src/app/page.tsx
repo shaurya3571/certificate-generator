@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import EventDetails from "@/components/certificate/EventDetails";
 import FormReadiness from "@/components/certificate/FormReadiness";
-import GenerationActions from "@/components/certificate/GenerationActions";
+import { GenerationActions } from "@/components/certificate/GenerationActions";
 import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
 import StepIndicator from "@/components/certificate/StepIndicator";
@@ -113,8 +113,9 @@ export default function Home() {
 
             {/* Step 04 */}
             <GenerationActions
-              isReady={isReady}
-              onGenerate={handleGenerate}
+              eventName={eventName}
+              template={selectedTemplate}
+              participants={participants}
             />
           </div>
         </section>
