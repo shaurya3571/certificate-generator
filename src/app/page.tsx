@@ -1,7 +1,14 @@
+"use client";
+
+import { useState } from "react";
+
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
+import EventDetails from "@/components/certificate/EventDetails";
 
 export default function Home() {
+  const [eventName, setEventName] = useState("");
+
   return (
     <>
       <Header />
@@ -23,57 +30,37 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">
-                Certificate details
-              </h3>
+          <div className="space-y-6">
+            <EventDetails
+              eventName={eventName}
+              onEventNameChange={setEventName}
+            />
 
-              <p className="mt-1 text-sm text-slate-500">
-                Complete the steps below to prepare your certificates.
-              </p>
-            </div>
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-sm font-semibold text-slate-700">
+                  02
+                </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <span className="text-xs font-semibold text-slate-500">
-                  STEP 01
-                </span>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    Certificate template
+                  </h3>
 
-                <h4 className="mt-2 font-medium text-slate-900">
-                  Event
-                </h4>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Add your event details.
-                </p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Choose a template for your certificates.
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <span className="text-xs font-semibold text-slate-500">
-                  STEP 02
-                </span>
-
-                <h4 className="mt-2 font-medium text-slate-900">
-                  Template
-                </h4>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Choose a certificate design.
+              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+                <p className="text-sm font-medium text-slate-700">
+                  Template selection coming next
                 </p>
-              </div>
-
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <span className="text-xs font-semibold text-slate-500">
-                  STEP 03
-                </span>
-
-                <h4 className="mt-2 font-medium text-slate-900">
-                  Participants
-                </h4>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Upload your participant list.
+                  You&apos;ll be able to choose a default template or
+                  upload your own.
                 </p>
               </div>
             </div>
