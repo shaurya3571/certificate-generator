@@ -90,7 +90,7 @@ export default function TemplateSelector({
             <button
               type="button"
               onClick={handleCustomTemplateSelect}
-              className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-medium transition ${
+              className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${
                 selectedTemplate === "custom"
                   ? "border-slate-900 bg-slate-900 text-white"
                   : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-white"

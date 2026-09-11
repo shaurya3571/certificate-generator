@@ -7,6 +7,7 @@ import FormReadiness from "@/components/certificate/FormReadiness";
 import GenerationActions from "@/components/certificate/GenerationActions";
 import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
+import StepIndicator from "@/components/certificate/StepIndicator";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
 import type {
@@ -59,15 +60,14 @@ export default function Home() {
       <Header />
 
       <PageContainer>
-        <section className="mx-auto max-w-3xl">
+        <section className="mx-auto max-w-4xl">
           {/* Page heading */}
           <div className="mb-8">
             <p className="mb-2 text-sm font-medium text-slate-500">
               Certificate workspace
             </p>
 
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Create certificates
+<h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">              Create certificates
             </h2>
 
             <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
@@ -75,6 +75,7 @@ export default function Home() {
               template and participant list.
             </p>
           </div>
+          <StepIndicator />
 
           {/* Workflow */}
           <div className="space-y-6">

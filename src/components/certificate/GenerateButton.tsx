@@ -14,7 +14,7 @@ export default function GenerateButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition sm:w-auto ${
+      className={`flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 sm:w-auto ${
         disabled
           ? "cursor-not-allowed bg-slate-200 text-slate-400"
           : "bg-slate-900 text-white shadow-sm hover:bg-slate-800 active:bg-slate-950"

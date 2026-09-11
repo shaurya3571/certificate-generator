@@ -20,11 +20,11 @@ export default function TemplateCard({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`group w-full rounded-xl border-2 bg-white p-3 text-left transition-all duration-200 ${
-        selected
-          ? "border-slate-900 shadow-sm"
-          : "border-slate-200 hover:border-slate-400"
-      }`}
+      className={`group w-full rounded-xl border-2 bg-white p-3 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${
+  selected
+    ? "border-slate-900 shadow-sm"
+    : "border-slate-200 hover:border-slate-400"
+}`}
     >
       {/* Certificate Preview */}
       <div
