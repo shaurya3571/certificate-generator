@@ -15,6 +15,10 @@ interface CsvRow {
 
 const REQUIRED_HEADERS = ["name", "email"];
 
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function parseParticipantsCsv(
   file: File,
 ): Promise<CsvParseResult> {
@@ -30,7 +34,8 @@ export function parseParticipantsCsv(
         const errors: string[] = [];
 
         /*
-         * Validate required headers before processing rows.
+         * Step 3B:
+         * Validate required headers.
          */
         const headers = results.meta.fields ?? [];
 
@@ -59,24 +64,56 @@ export function parseParticipantsCsv(
         }
 
         /*
-         * Convert parsed rows into Participant objects.
-         * Detailed row validation comes in Step 3C.
+         * Step 3C:
+         * Validate individual participant rows.
          */
         const participants: Participant[] = [];
 
-        for (const row of results.data) {
+        results.data.forEach((row, index) => {
+          const csvRowNumber = index + 2;
+
           const name = row.name?.trim() ?? "";
           const email = row.email?.trim() ?? "";
 
+          /*
+           * Ignore completely empty rows.
+           */
           if (!name && !email) {
-            continue;
+            return;
           }
 
-          participants.push({
-            name,
-            email,
-          });
-        }
+          /*
+           * Name validation.
+           */
+          if (!name) {
+            errors.push(
+              `Row ${csvRowNumber}: name is required.`,
+            );
+          }
+
+          /*
+           * Email validation.
+           */
+          if (!email) {
+            errors.push(
+              `Row ${csvRowNumber}: email is required.`,
+            );
+          } else if (!isValidEmail(email)) {
+            errors.push(
+              `Row ${csvRowNumber}: invalid email address.`,
+            );
+          }
+
+          /*
+           * Only add completely valid rows.
+           */
+          if (name && email && isValidEmail(email)) {
+            participants.push({
+              name,
+              email,
+            });
+          }
+        });
 
         /*
          * Papa Parse structural errors.
