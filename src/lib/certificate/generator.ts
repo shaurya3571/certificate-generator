@@ -1,20 +1,41 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import {
+  PDFDocument,
+  StandardFonts,
+  rgb,
+} from "pdf-lib";
+
+import type { TemplateType } from "@/types/certificate";
 
 export interface CertificateGenerationInput {
   eventName: string;
   participantName: string;
   certificateId: string;
+  template: TemplateType;
 }
 
-export async function generateCertificate(
-  input: CertificateGenerationInput,
-): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.create();
+function drawCenteredText(
+  page: ReturnType<PDFDocument["addPage"]>,
+  text: string,
+  font: Awaited<ReturnType<PDFDocument["embedFont"]>>,
+  size: number,
+  y: number,
+) {
+  const { width } = page.getSize();
 
-  /*
-   * Landscape certificate:
-   * 842 × 595 points ≈ A4 landscape
-   */
+  const textWidth = font.widthOfTextAtSize(text, size);
+
+  page.drawText(text, {
+    x: (width - textWidth) / 2,
+    y,
+    size,
+    font,
+  });
+}
+
+async function generateClassicCertificate(
+  pdfDoc: PDFDocument,
+  input: CertificateGenerationInput,
+) {
   const page = pdfDoc.addPage([842, 595]);
 
   const { width, height } = page.getSize();
@@ -32,109 +53,165 @@ export async function generateCertificate(
   );
 
   /*
-   * Outer certificate border.
+   * Classic double border.
    */
   page.drawRectangle({
-    x: 30,
-    y: 30,
-    width: width - 60,
-    height: height - 60,
+    x: 28,
+    y: 28,
+    width: width - 56,
+    height: height - 56,
     borderWidth: 2,
     borderColor: rgb(0.15, 0.15, 0.15),
   });
 
-  /*
-   * Certificate title.
-   */
-  const title = "CERTIFICATE OF PARTICIPATION";
-
-  const titleSize = 30;
-  const titleWidth = titleFont.widthOfTextAtSize(
-    title,
-    titleSize,
-  );
-
-  page.drawText(title, {
-    x: (width - titleWidth) / 2,
-    y: height - 130,
-    size: titleSize,
-    font: titleFont,
-    color: rgb(0.1, 0.1, 0.1),
+  page.drawRectangle({
+    x: 38,
+    y: 38,
+    width: width - 76,
+    height: height - 76,
+    borderWidth: 1,
+    borderColor: rgb(0.45, 0.45, 0.45),
   });
 
-  /*
-   * Supporting text.
-   */
-  const subtitle = "This certificate is proudly presented to";
-
-  const subtitleSize = 16;
-  const subtitleWidth = bodyFont.widthOfTextAtSize(
-    subtitle,
-    subtitleSize,
+  drawCenteredText(
+    page,
+    "CERTIFICATE OF PARTICIPATION",
+    titleFont,
+    30,
+    height - 130,
   );
 
-  page.drawText(subtitle, {
-    x: (width - subtitleWidth) / 2,
-    y: height - 195,
-    size: subtitleSize,
-    font: bodyFont,
-    color: rgb(0.35, 0.35, 0.35),
-  });
+  drawCenteredText(
+    page,
+    "This certificate is proudly presented to",
+    bodyFont,
+    16,
+    height - 195,
+  );
 
-  /*
-   * Participant name.
-   */
-  const nameSize = 34;
-  const nameWidth = titleFont.widthOfTextAtSize(
+  drawCenteredText(
+    page,
     input.participantName,
-    nameSize,
+    titleFont,
+    34,
+    height - 260,
   );
 
-  page.drawText(input.participantName, {
-    x: (width - nameWidth) / 2,
-    y: height - 260,
-    size: nameSize,
-    font: titleFont,
-    color: rgb(0.05, 0.05, 0.05),
+  drawCenteredText(
+    page,
+    `For participating in ${input.eventName}`,
+    bodyFont,
+    17,
+    height - 315,
+  );
+
+  drawCenteredText(
+    page,
+    `Certificate ID: ${input.certificateId}`,
+    italicFont,
+    11,
+    75,
+  );
+}
+
+async function generateModernCertificate(
+  pdfDoc: PDFDocument,
+  input: CertificateGenerationInput,
+) {
+  const page = pdfDoc.addPage([842, 595]);
+
+  const { width, height } = page.getSize();
+
+  const titleFont = await pdfDoc.embedFont(
+    StandardFonts.HelveticaBold,
+  );
+
+  const bodyFont = await pdfDoc.embedFont(
+    StandardFonts.Helvetica,
+  );
+
+  const italicFont = await pdfDoc.embedFont(
+    StandardFonts.HelveticaOblique,
+  );
+
+  /*
+   * Modern accent panel.
+   */
+  page.drawRectangle({
+    x: 0,
+    y: height - 18,
+    width,
+    height: 18,
+    color: rgb(0.12, 0.12, 0.12),
   });
 
   /*
-   * Event information.
+   * Minimal outer border.
    */
-  const eventText = `For participating in ${input.eventName}`;
-
-  const eventSize = 17;
-  const eventWidth = bodyFont.widthOfTextAtSize(
-    eventText,
-    eventSize,
-  );
-
-  page.drawText(eventText, {
-    x: (width - eventWidth) / 2,
-    y: height - 315,
-    size: eventSize,
-    font: bodyFont,
-    color: rgb(0.25, 0.25, 0.25),
+  page.drawRectangle({
+    x: 45,
+    y: 45,
+    width: width - 90,
+    height: height - 90,
+    borderWidth: 1,
+    borderColor: rgb(0.75, 0.75, 0.75),
   });
 
-  /*
-   * Certificate ID.
-   */
-  const idText = `Certificate ID: ${input.certificateId}`;
-
-  const idSize = 11;
-  const idWidth = italicFont.widthOfTextAtSize(
-    idText,
-    idSize,
+  drawCenteredText(
+    page,
+    "CERTIFICATE",
+    titleFont,
+    38,
+    height - 145,
   );
 
-  page.drawText(idText, {
-    x: (width - idWidth) / 2,
-    y: 75,
-    size: idSize,
-    font: italicFont,
-    color: rgb(0.4, 0.4, 0.4),
-  });
+  drawCenteredText(
+    page,
+    "OF PARTICIPATION",
+    bodyFont,
+    18,
+    height - 180,
+  );
+
+  drawCenteredText(
+    page,
+    input.participantName,
+    titleFont,
+    36,
+    height - 260,
+  );
+
+  drawCenteredText(
+    page,
+    `Participated in ${input.eventName}`,
+    bodyFont,
+    17,
+    height - 315,
+  );
+
+  drawCenteredText(
+    page,
+    `Certificate ID: ${input.certificateId}`,
+    italicFont,
+    11,
+    75,
+  );
+}
+
+export async function generateCertificate(
+  input: CertificateGenerationInput,
+): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create();
+
+  if (input.template === "modern") {
+    await generateModernCertificate(pdfDoc, input);
+  } else {
+    /*
+     * Classic is also the fallback for custom at this stage.
+     * Custom template rendering will be implemented separately.
+     */
+    await generateClassicCertificate(pdfDoc, input);
+  }
 
   return pdfDoc.save();
 }
