@@ -12,6 +12,7 @@ export default function Home() {
   const [eventName, setEventName] = useState("");
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateType | null>(null);
+  const [customTemplate, setCustomTemplate] = useState<File | null>(null);
 
   return (
     <>
@@ -42,7 +43,9 @@ export default function Home() {
 
             <TemplateSelector
               selectedTemplate={selectedTemplate}
+              customTemplate={customTemplate}
               onTemplateChange={setSelectedTemplate}
+              onCustomTemplateChange={setCustomTemplate}
             />
           </div>
         </section>
