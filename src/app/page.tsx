@@ -7,16 +7,25 @@ import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
-import type { TemplateType } from "@/types/certificate";
+import type {
+  Participant,
+  TemplateType,
+} from "@/types/certificate";
 
 export default function Home() {
   const [eventName, setEventName] = useState("");
+
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateType | null>(null);
+
   const [customTemplate, setCustomTemplate] =
     useState<File | null>(null);
+
   const [participantsFile, setParticipantsFile] =
     useState<File | null>(null);
+
+  const [participants, setParticipants] =
+    useState<Participant[]>([]);
 
   return (
     <>
@@ -24,6 +33,7 @@ export default function Home() {
 
       <PageContainer>
         <section className="mx-auto max-w-3xl">
+          {/* Page heading */}
           <div className="mb-8">
             <p className="mb-2 text-sm font-medium text-slate-500">
               Certificate workspace
@@ -39,12 +49,15 @@ export default function Home() {
             </p>
           </div>
 
+          {/* Certificate creation workflow */}
           <div className="space-y-6">
+            {/* Step 1 */}
             <EventDetails
               eventName={eventName}
               onEventNameChange={setEventName}
             />
 
+            {/* Step 2 */}
             <TemplateSelector
               selectedTemplate={selectedTemplate}
               customTemplate={customTemplate}
@@ -52,9 +65,12 @@ export default function Home() {
               onCustomTemplateChange={setCustomTemplate}
             />
 
+            {/* Step 3 */}
             <ParticipantsUpload
               file={participantsFile}
+              participants={participants}
               onFileChange={setParticipantsFile}
+              onParticipantsChange={setParticipants}
             />
           </div>
         </section>
