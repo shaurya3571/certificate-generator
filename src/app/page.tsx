@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import EventDetails from "@/components/certificate/EventDetails";
+import FormReadiness from "@/components/certificate/FormReadiness";
+import GenerationActions from "@/components/certificate/GenerationActions";
 import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
 import Header from "@/components/layout/Header";
@@ -27,6 +29,31 @@ export default function Home() {
   const [participants, setParticipants] =
     useState<Participant[]>([]);
 
+  const hasEventName = eventName.trim().length > 0;
+
+  const hasTemplate =
+    selectedTemplate !== null &&
+    (selectedTemplate !== "custom" || customTemplate !== null);
+
+  const hasParticipantsFile = participantsFile !== null;
+
+  const hasParticipants = participants.length > 0;
+
+  const isReady =
+    hasEventName &&
+    hasTemplate &&
+    hasParticipantsFile &&
+    hasParticipants;
+
+  const handleGenerate = () => {
+    if (!isReady) {
+      return;
+    }
+
+    // Actual certificate generation will be implemented in a later step.
+    console.log("Ready to generate certificates.");
+  };
+
   return (
     <>
       <Header />
@@ -49,15 +76,15 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Certificate creation workflow */}
+          {/* Workflow */}
           <div className="space-y-6">
-            {/* Step 1 */}
+            {/* Step 01 */}
             <EventDetails
               eventName={eventName}
               onEventNameChange={setEventName}
             />
 
-            {/* Step 2 */}
+            {/* Step 02 */}
             <TemplateSelector
               selectedTemplate={selectedTemplate}
               customTemplate={customTemplate}
@@ -65,12 +92,27 @@ export default function Home() {
               onCustomTemplateChange={setCustomTemplate}
             />
 
-            {/* Step 3 */}
+            {/* Step 03 */}
             <ParticipantsUpload
               file={participantsFile}
               participants={participants}
               onFileChange={setParticipantsFile}
               onParticipantsChange={setParticipants}
+            />
+
+            {/* Generation checklist */}
+            <FormReadiness
+              eventName={eventName}
+              selectedTemplate={selectedTemplate}
+              customTemplate={customTemplate}
+              participantsFile={participantsFile}
+              participantCount={participants.length}
+            />
+
+            {/* Step 04 */}
+            <GenerationActions
+              isReady={isReady}
+              onGenerate={handleGenerate}
             />
           </div>
         </section>
