@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import EventDetails from "@/components/certificate/EventDetails";
 import FormReadiness from "@/components/certificate/FormReadiness";
@@ -51,6 +52,22 @@ export default function Home() {
               Generate personalized certificates for your event using a
               template and participant list.
             </p>
+
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="rounded-xl bg-gray-900 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-gray-800"
+              >
+                Log In
+              </Link>
+
+              <Link
+                href="/signup"
+                className="rounded-xl border border-gray-300 bg-white px-5 py-3 text-center text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
 
           <StepIndicator />
