@@ -48,8 +48,8 @@ export default function LoginPage() {
         password,
       });
 
-      router.push("/");
-      router.refresh();
+    router.push("/organizer");     
+    router.refresh();
     } catch (err) {
       setError(
         err instanceof Error
