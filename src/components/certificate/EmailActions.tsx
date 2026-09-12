@@ -79,7 +79,9 @@ export function EmailActions({
           body: JSON.stringify({
             eventName: eventName.trim(),
             template,
-            participants,
+            participants: participants.map((participant) => ({
+              participant,
+            })),
           }),
         },
       );
@@ -112,6 +114,104 @@ export function EmailActions({
         err instanceof Error
           ? err.message
           : "Unable to send certificate emails.",
+      );
+
+      setStatus("error");
+    }
+  };
+
+  const handleRetryFailed = async () => {
+    if (!template || !result) {
+      return;
+    }
+
+    const failedParticipants = result.results
+      .filter((item) => !item.success)
+      .map((item) => ({
+        participant: item.participant,
+        certificateId: item.certificateId,
+      }));
+
+    if (failedParticipants.length === 0) {
+      return;
+    }
+
+    setStatus("sending");
+    setCurrentIndex(0);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        "/api/email/send-bulk",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            eventName: eventName.trim(),
+            template,
+            participants: failedParticipants,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+
+        throw new Error(
+          data.error ??
+            "Unable to retry failed certificate emails.",
+        );
+      }
+
+      const retryData =
+        (await response.json()) as BulkEmailResponse;
+
+      const mergedResults = result.results.map(
+        (original) => {
+          const retryResult =
+            retryData.results.find(
+              (retry) =>
+                retry.participant.email ===
+                original.participant.email,
+            );
+
+          return retryResult
+            ? retryResult
+            : original;
+        },
+      );
+
+      const mergedResult: BulkEmailResponse = {
+        success: mergedResults.every(
+          (item) => item.success,
+        ),
+        total: mergedResults.length,
+        successful: mergedResults.filter(
+          (item) => item.success,
+        ).length,
+        failed: mergedResults.filter(
+          (item) => !item.success,
+        ).length,
+        results: mergedResults,
+      };
+
+      setResult(mergedResult);
+      setCurrentIndex(failedParticipants.length);
+
+      if (mergedResult.failed === 0) {
+        setStatus("success");
+      } else if (mergedResult.successful > 0) {
+        setStatus("partial");
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to retry failed certificate emails.",
       );
 
       setStatus("error");
@@ -220,6 +320,14 @@ export function EmailActions({
                 </div>
               ))}
           </div>
+
+          <button
+            type="button"
+            onClick={handleRetryFailed}
+            className="mt-4 rounded-lg border border-yellow-300 bg-white px-4 py-2 text-sm font-semibold text-yellow-800 transition hover:bg-yellow-50"
+          >
+            Retry Failed Emails
+          </button>
         </div>
       )}
 

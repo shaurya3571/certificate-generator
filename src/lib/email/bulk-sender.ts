@@ -1,13 +1,17 @@
 import type { Participant, TemplateType } from "@/types/certificate";
-
 import { generateCertificate } from "@/lib/certificate/generator";
 import { generateCertificateId } from "@/lib/certificate/id";
 import { sendCertificateEmail } from "./sender";
 
+export interface BulkEmailParticipant {
+  participant: Participant;
+  certificateId?: string;
+}
+
 export interface BulkEmailInput {
   eventName: string;
   template: TemplateType;
-  participants: Participant[];
+  participants: BulkEmailParticipant[];
 }
 
 export interface EmailSendResult {
@@ -21,26 +25,29 @@ export async function sendBulkCertificateEmails(
   input: BulkEmailInput,
 ): Promise<EmailSendResult[]> {
   const results: EmailSendResult[] = [];
-
   const usedCertificateIds = new Set<string>();
 
-  for (const participant of input.participants) {
-    try {
-      let certificateId = generateCertificateId();
+  for (const item of input.participants) {
+    const { participant } = item;
 
-      while (usedCertificateIds.has(certificateId)) {
-        certificateId = generateCertificateId();
+    try {
+      let certificateId =
+        item.certificateId ?? generateCertificateId();
+
+      if (!item.certificateId) {
+        while (usedCertificateIds.has(certificateId)) {
+          certificateId = generateCertificateId();
+        }
+
+        usedCertificateIds.add(certificateId);
       }
 
-      usedCertificateIds.add(certificateId);
-
-      const certificatePdf =
-        await generateCertificate({
-          eventName: input.eventName,
-          participantName: participant.name,
-          certificateId,
-          template: input.template,
-        });
+      const certificatePdf = await generateCertificate({
+        eventName: input.eventName,
+        participantName: participant.name,
+        certificateId,
+        template: input.template,
+      });
 
       const safeName = participant.name
         .trim()
@@ -66,6 +73,7 @@ export async function sendBulkCertificateEmails(
     } catch (error) {
       results.push({
         participant,
+        certificateId: item.certificateId,
         success: false,
         error:
           error instanceof Error
