@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import EventDetails from "@/components/certificate/EventDetails";
 import FormReadiness from "@/components/certificate/FormReadiness";
-import GenerationActions from "@/components/certificate/GenerationActions";
+import { GenerationActions } from "@/components/certificate/GenerationActions";
 import ParticipantsUpload from "@/components/certificate/ParticipantsUpload";
 import TemplateSelector from "@/components/certificate/TemplateSelector";
 import StepIndicator from "@/components/certificate/StepIndicator";
@@ -29,32 +29,6 @@ export default function Home() {
 
   const [participants, setParticipants] =
     useState<Participant[]>([]);
-
-  const hasEventName = eventName.trim().length > 0;
-
-  const hasTemplate =
-    selectedTemplate !== null &&
-    (selectedTemplate !== "custom" || customTemplate !== null);
-
-  const hasParticipantsFile = participantsFile !== null;
-
-  const hasParticipants = participants.length > 0;
-
-  const isReady =
-    hasEventName &&
-    hasTemplate &&
-    hasParticipantsFile &&
-    hasParticipants;
-
-  const handleGenerate = () => {
-    if (!isReady) {
-      return;
-    }
-
-    // Actual certificate generation will be implemented in a later step.
-    console.log("Ready to generate certificates.");
-  };
-
   return (
     <>
       <Header />
@@ -113,8 +87,9 @@ export default function Home() {
 
             {/* Step 04 */}
             <GenerationActions
-              isReady={isReady}
-              onGenerate={handleGenerate}
+              eventName={eventName}
+              template={selectedTemplate}
+              participants={participants}
             />
           </div>
         </section>
