@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import EventDetails from "@/components/certificate/EventDetails";
 import FormReadiness from "@/components/certificate/FormReadiness";
@@ -11,13 +12,17 @@ import StepIndicator from "@/components/certificate/StepIndicator";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
 import { EmailActions } from "@/components/certificate/EmailActions";
+import { useAuth } from "@/components/auth/AuthProvider";
 import type {
   Participant,
   TemplateType,
 } from "@/types/certificate";
 
 export default function Home() {
+  const { user } = useAuth();
+
   const [eventName, setEventName] = useState("");
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateType | null>(null);
@@ -30,6 +35,12 @@ export default function Home() {
 
   const [participants, setParticipants] =
     useState<Participant[]>([]);
+
+  const handleAuthRequired = () => {
+    if (!user) {
+      setShowAuthPrompt(true);
+    }
+  };
 
   return (
     <>
@@ -51,6 +62,7 @@ export default function Home() {
               Generate personalized certificates for your event using a
               template and participant list.
             </p>
+
           </div>
 
           <StepIndicator />
@@ -69,6 +81,8 @@ export default function Home() {
               customTemplate={customTemplate}
               onTemplateChange={setSelectedTemplate}
               onCustomTemplateChange={setCustomTemplate}
+              isAuthenticated={Boolean(user)}
+              onAuthRequired={handleAuthRequired}
             />
 
             {/* Step 03 */}
@@ -76,6 +90,8 @@ export default function Home() {
               participants={participants}
               onParticipantsChange={setParticipants}
               onFileChange={setParticipantsFile}
+              isAuthenticated={Boolean(user)}
+              onAuthRequired={handleAuthRequired}
             />
 
             {/* Generation checklist */}
@@ -92,6 +108,8 @@ export default function Home() {
               eventName={eventName}
               template={selectedTemplate}
               participants={participants}
+              isAuthenticated={Boolean(user)}
+              onAuthRequired={handleAuthRequired}
             />
             <EmailActions
               eventName={eventName}
@@ -102,6 +120,59 @@ export default function Home() {
           </div>
         </section>
       </PageContainer>
+
+      {showAuthPrompt && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4"
+          role="presentation"
+          onClick={() => setShowAuthPrompt(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="auth-prompt-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2
+              id="auth-prompt-title"
+              className="text-xl font-semibold text-slate-950"
+            >
+              Sign in to continue
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Please sign in or create an account before uploading files or generating certificates.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                onClick={() => setShowAuthPrompt(false)}
+                className="flex-1 rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                Log In
+              </Link>
+
+              <Link
+                href="/signup"
+                onClick={() => setShowAuthPrompt(false)}
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+              >
+                Sign Up
+              </Link>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowAuthPrompt(false)}
+              className="mt-4 w-full text-center text-sm font-medium text-slate-500 hover:text-slate-900"
+            >
+              Continue browsing
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

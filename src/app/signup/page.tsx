@@ -168,13 +168,13 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-4 text-center text-sm text-gray-500">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-gray-900 underline underline-offset-4"
+              className="font-semibold text-gray-900 hover:underline"
             >
-              Log in
+              Log In
             </Link>
           </p>
         </div>

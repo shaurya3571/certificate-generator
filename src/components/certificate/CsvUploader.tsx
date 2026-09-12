@@ -10,6 +10,8 @@ import {
 interface CsvUploaderProps {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  isAuthenticated: boolean;
+  onAuthRequired: () => void;
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -29,6 +31,8 @@ function formatFileSize(bytes: number) {
 export default function CsvUploader({
   file,
   onFileChange,
+  isAuthenticated,
+  onAuthRequired,
 }: CsvUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -76,6 +80,12 @@ export default function CsvUploader({
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement>,
   ) => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      event.target.value = "";
+      return;
+    }
+
     handleFile(event.target.files?.[0]);
 
     event.target.value = "";
@@ -95,7 +105,21 @@ export default function CsvUploader({
     event.preventDefault();
     setIsDragging(false);
 
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
     handleFile(event.dataTransfer.files?.[0]);
+  };
+
+  const handleUploadClick = () => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
+    inputRef.current?.click();
   };
 
   const handleRemove = () => {
@@ -118,11 +142,11 @@ export default function CsvUploader({
         <div
           role="button"
           tabIndex={0}
-          onClick={() => inputRef.current?.click()}
+          onClick={handleUploadClick}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
               event.preventDefault();
-              inputRef.current?.click();
+              handleUploadClick();
             }
           }}
           onDragOver={handleDragOver}
