@@ -71,6 +71,12 @@ export function EventList({
                 ).toLocaleDateString()}
               </p>
             </div>
+
+            <div className="mt-4 flex justify-end">
+              <span className="text-sm font-semibold text-gray-700">
+                Manage Event →
+              </span>
+            </div>
           </button>
         ))}
       </div>

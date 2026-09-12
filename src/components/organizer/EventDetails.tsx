@@ -63,6 +63,21 @@ export function EventDetails({
             {event.id}
           </p>
         </div>
+
+        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <p className="text-xs text-gray-500">
+            Selected Event
+          </p>
+
+          <p className="mt-1 text-sm font-semibold text-gray-900">
+            This event is currently selected.
+          </p>
+
+          <p className="mt-1 text-xs text-gray-500">
+            Participants and certificates will be
+            managed for this event.
+          </p>
+        </div>
       </div>
     </div>
   );
