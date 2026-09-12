@@ -4,6 +4,7 @@ import {
   useState,
 } from "react";
 import type { ChangeEvent } from "react";
+import { deleteEvent } from "@/lib/supabase/events";
 import {
   getEventParticipants,
   saveParticipants,
@@ -16,11 +17,13 @@ import type { Event } from "@/types/database";
 interface EventDetailsProps {
   event: Event;
   onBack: () => void;
+  onDeleted: (eventId: string) => void;
 }
 
 export function EventDetails({
   event,
   onBack,
+  onDeleted,
 }: EventDetailsProps) {
   const [participants, setParticipants] =
     useState<Participant[]>([]);
@@ -44,6 +47,12 @@ export function EventDetails({
     useState<string | null>(null);
 
   const [generationError, setGenerationError] =
+    useState<string | null>(null);
+
+  const [deletingEvent, setDeletingEvent] =
+    useState(false);
+
+  const [deleteError, setDeleteError] =
     useState<string | null>(null);
 
   const handleParticipantsFile = async (
@@ -192,6 +201,37 @@ export function EventDetails({
       );
     } finally {
       setGeneratingCertificates(false);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    if (deletingEvent) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${event.name}"? This will also delete its participants and certificates.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingEvent(true);
+    setDeleteError(null);
+
+    try {
+      await deleteEvent(event.id);
+
+      onDeleted(event.id);
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : "Unable to delete event.",
+      );
+    } finally {
+      setDeletingEvent(false);
     }
   };
 
@@ -379,6 +419,30 @@ export function EventDetails({
             >
               <p className="text-sm font-medium text-red-700">
                 {generationError}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 border-t border-gray-200 pt-6">
+          <button
+            type="button"
+            onClick={handleDeleteEvent}
+            disabled={deletingEvent}
+            className="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {deletingEvent
+              ? "Deleting event..."
+              : "Delete Event"}
+          </button>
+
+          {deleteError && (
+            <div
+              role="alert"
+              className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3"
+            >
+              <p className="text-sm font-medium text-red-700">
+                {deleteError}
               </p>
             </div>
           )}

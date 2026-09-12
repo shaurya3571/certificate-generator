@@ -66,3 +66,25 @@ export async function getOrganizerEvents(
 
   return (data ?? []) as Event[];
 }
+
+export async function deleteEvent(
+  eventId: string,
+): Promise<void> {
+  if (!eventId.trim()) {
+    throw new Error("Event ID is required.");
+  }
+
+  const { error } = await supabase
+    .from("events")
+    .delete()
+    .eq("id", eventId);
+
+  if (error) {
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to delete event.",
+      ),
+    );
+  }
+}

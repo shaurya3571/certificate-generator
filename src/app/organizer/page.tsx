@@ -315,6 +315,14 @@ export default function OrganizerPage() {
                     onBack={() =>
                       setSelectedEvent(null)
                     }
+                    onDeleted={(eventId) => {
+                      setEvents((currentEvents) =>
+                        currentEvents.filter(
+                          (event) => event.id !== eventId,
+                        ),
+                      );
+                      setSelectedEvent(null);
+                    }}
                   />
                 ) : (
                   <EventList
