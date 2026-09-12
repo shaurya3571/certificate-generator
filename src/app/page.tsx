@@ -29,6 +29,7 @@ export default function Home() {
 
   const [participants, setParticipants] =
     useState<Participant[]>([]);
+
   return (
     <>
       <Header />
