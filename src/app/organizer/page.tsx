@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
-
+import { getOrganizerEvents } from "@/lib/supabase/events";
 export default function OrganizerPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -31,6 +31,21 @@ export default function OrganizerPage() {
       router.replace("/login");
     }
   }, [loading, user, router]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadEvents = async () => {
+      try {
+        const events = await getOrganizerEvents(user.id);
+        console.log("Organizer events:", events);
+      } catch (error) {
+        console.error("Unable to load organizer events:", error);
+      }
+    };
+
+    loadEvents();
+  }, [user]);
 
   const handleCreateEvent = async () => {
     if (!user) {
