@@ -2,6 +2,7 @@ import type {
   Participant,
   TemplateType,
 } from "@/types/certificate";
+import type { DatabaseParticipant } from "@/types/database";
 
 import {
   createEvent,
@@ -129,4 +130,84 @@ export async function generateAndSaveCertificates(
     eventId: event.id,
     certificates,
   };
+}
+
+export interface GenerateForEventInput {
+  eventId: string;
+  eventName: string;
+  template: TemplateType;
+  participants: DatabaseParticipant[];
+}
+
+export async function generateCertificatesForEvent(
+  input: GenerateForEventInput,
+): Promise<GeneratedDatabaseCertificate[]> {
+  if (!input.eventId.trim()) {
+    throw new Error("Event ID is required.");
+  }
+
+  if (!input.eventName.trim()) {
+    throw new Error("Event name is required.");
+  }
+
+  if (input.participants.length === 0) {
+    throw new Error("No participants available.");
+  }
+
+  const certificates: GeneratedDatabaseCertificate[] =
+    [];
+
+  const certificateRecords = [];
+
+  const usedCertificateIds = new Set<string>();
+
+  for (const participant of input.participants) {
+    let certificateId = generateCertificateId();
+
+    while (usedCertificateIds.has(certificateId)) {
+      certificateId = generateCertificateId();
+    }
+
+    usedCertificateIds.add(certificateId);
+
+    const certificatePdf =
+      await generateCertificate({
+        eventName: input.eventName,
+        participantName: participant.name,
+        certificateId,
+        template: input.template,
+      });
+
+    const safeName = participant.name
+      .trim()
+      .replace(/[^a-zA-Z0-9-_ ]/g, "")
+      .replace(/\s+/g, "-");
+
+    const fileName =
+      `${safeName}-${certificateId}.pdf`;
+
+    certificates.push({
+      participant: {
+        name: participant.name,
+        email: participant.email,
+      },
+      participantId: participant.id,
+      certificateId,
+      fileName,
+      data: certificatePdf,
+    });
+
+    certificateRecords.push({
+      eventId: input.eventId,
+      participantId: participant.id,
+      certificateId,
+      fileName,
+      emailStatus: "pending" as const,
+      emailError: null,
+    });
+  }
+
+  await saveCertificates(certificateRecords);
+
+  return certificates;
 }
