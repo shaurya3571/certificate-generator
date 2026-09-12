@@ -40,3 +40,30 @@ export async function saveParticipants(
 
   return data as DatabaseParticipant[];
 }
+
+export async function getEventParticipants(
+  eventId: string,
+): Promise<DatabaseParticipant[]> {
+  if (!eventId.trim()) {
+    throw new Error("Event ID is required.");
+  }
+
+  const { data, error } = await supabase
+    .from("participants")
+    .select("*")
+    .eq("event_id", eventId)
+    .order("created_at", {
+      ascending: true,
+    });
+
+  if (error) {
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to fetch participants.",
+      ),
+    );
+  }
+
+  return (data ?? []) as DatabaseParticipant[];
+}
