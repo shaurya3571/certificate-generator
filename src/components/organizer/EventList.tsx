@@ -4,10 +4,12 @@ import type { Event } from "@/types/database";
 
 interface EventListProps {
   events: Event[];
+  onSelectEvent: (event: Event) => void;
 }
 
 export function EventList({
   events,
+  onSelectEvent,
 }: EventListProps) {
   if (events.length === 0) {
     return (
@@ -43,9 +45,11 @@ export function EventList({
 
       <div className="mt-6 space-y-3">
         {events.map((event) => (
-          <div
+          <button
+            type="button"
             key={event.id}
-            className="rounded-xl border border-gray-200 p-4 transition hover:bg-gray-50"
+            onClick={() => onSelectEvent(event)}
+            className="w-full rounded-xl border border-gray-200 p-4 text-left transition hover:bg-gray-50"
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -67,7 +71,7 @@ export function EventList({
                 ).toLocaleDateString()}
               </p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>

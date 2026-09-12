@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { EventDetails } from "@/components/organizer/EventDetails";
 import { EventList } from "@/components/organizer/EventList";
 import type { Event } from "@/types/database";
 export default function OrganizerPage() {
@@ -35,6 +36,9 @@ export default function OrganizerPage() {
 
   const [events, setEvents] =
     useState<Event[]>([]);
+
+  const [selectedEvent, setSelectedEvent] =
+    useState<Event | null>(null);
 
   const [eventsLoading, setEventsLoading] =
     useState(true);
@@ -304,7 +308,21 @@ export default function OrganizerPage() {
             )}
 
             {!eventsLoading && !eventsError && (
-              <EventList events={events} />
+              <>
+                {selectedEvent ? (
+                  <EventDetails
+                    event={selectedEvent}
+                    onBack={() =>
+                      setSelectedEvent(null)
+                    }
+                  />
+                ) : (
+                  <EventList
+                    events={events}
+                    onSelectEvent={setSelectedEvent}
+                  />
+                )}
+              </>
             )}
           </div>
         </section>
