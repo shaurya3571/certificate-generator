@@ -8,4 +8,31 @@ if (!apiKey) {
   );
 }
 
-export const resend = new Resend(apiKey);
+const resend = new Resend(apiKey);
+
+export interface SendEmailInput {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+export async function sendEmail(
+  input: SendEmailInput,
+) {
+  const from =
+    process.env.RESEND_FROM_EMAIL ??
+    "Certificate Generator <onboarding@resend.dev>";
+
+  const { data, error } = await resend.emails.send({
+    from,
+    to: [input.to],
+    subject: input.subject,
+    html: input.html,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
