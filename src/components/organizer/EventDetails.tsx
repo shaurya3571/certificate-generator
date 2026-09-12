@@ -4,7 +4,12 @@ import {
   useState,
 } from "react";
 import type { ChangeEvent } from "react";
-import { saveParticipants } from "@/lib/supabase/participants";
+import {
+  getEventParticipants,
+  saveParticipants,
+} from "@/lib/supabase/participants";
+import { generateCertificatesForEvent } from "@/lib/certificate/generation-workflow";
+import { createCertificatesZip } from "@/lib/certificate/zip";
 import type { Participant } from "@/types/certificate";
 import type { Event } from "@/types/database";
 
@@ -27,6 +32,15 @@ export function EventDetails({
     useState<string | null>(null);
 
   const [participantError, setParticipantError] =
+    useState<string | null>(null);
+
+  const [generatingCertificates, setGeneratingCertificates] =
+    useState(false);
+
+  const [generationMessage, setGenerationMessage] =
+    useState<string | null>(null);
+
+  const [generationError, setGenerationError] =
     useState<string | null>(null);
 
   const handleParticipantsFile = async (
@@ -109,6 +123,65 @@ export function EventDetails({
       );
     } finally {
       setSavingParticipants(false);
+    }
+  };
+
+  const handleGenerateCertificates = async () => {
+    setGeneratingCertificates(true);
+    setGenerationMessage(null);
+    setGenerationError(null);
+
+    try {
+      const eventParticipants =
+        await getEventParticipants(event.id);
+
+      if (eventParticipants.length === 0) {
+        throw new Error(
+          "No participants found for this event.",
+        );
+      }
+
+      const certificates =
+        await generateCertificatesForEvent({
+          eventId: event.id,
+          eventName: event.name,
+          template: event.template,
+          participants: eventParticipants,
+        });
+
+      const zipData =
+        await createCertificatesZip(certificates);
+
+      const blob = new Blob([zipData], {
+        type: "application/zip",
+      });
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${event.name
+        .trim()
+        .replace(/[^a-zA-Z0-9-_ ]/g, "")
+        .replace(/\s+/g, "-")}-certificates.zip`;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+
+      setGenerationMessage(
+        `${certificates.length} certificates generated successfully.`,
+      );
+    } catch (error) {
+      setGenerationError(
+        error instanceof Error
+          ? error.message
+          : "Unable to generate certificates.",
+      );
+    } finally {
+      setGeneratingCertificates(false);
     }
   };
 
@@ -252,6 +325,42 @@ export function EventDetails({
               className="mt-3 text-sm text-red-600"
             >
               {participantError}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-gray-200 p-5">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Certificates
+          </h3>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Generate certificates for all saved participants.
+          </p>
+
+          <button
+            type="button"
+            onClick={handleGenerateCertificates}
+            disabled={generatingCertificates}
+            className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+          >
+            {generatingCertificates
+              ? "Generating..."
+              : "Generate Certificates"}
+          </button>
+
+          {generationMessage && (
+            <p className="mt-3 text-sm text-green-600">
+              {generationMessage}
+            </p>
+          )}
+
+          {generationError && (
+            <p
+              role="alert"
+              className="mt-3 text-sm text-red-600"
+            >
+              {generationError}
             </p>
           )}
         </div>
