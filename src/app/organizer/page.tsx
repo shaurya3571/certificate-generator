@@ -69,18 +69,18 @@ export default function OrganizerPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div
-          role="status"
-          className="text-sm text-gray-600"
-        >
-          Checking your session...
-        </div>
-      </main>
-    );
-  }
+ if (loading) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div
+        role="status"
+        className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm text-gray-600 shadow-sm"
+      >
+        Checking your session...
+      </div>
+    </main>
+  );
+}
 
   if (!user) {
     return null;

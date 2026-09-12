@@ -39,15 +39,20 @@ export function AuthProvider({
     let mounted = true;
 
     const loadUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-      if (mounted) {
-        setUser(user);
-        setLoading(false);
-      }
-    };
+    if (mounted) {
+      setUser(user);
+    }
+  } finally {
+    if (mounted) {
+      setLoading(false);
+    }
+  }
+};
 
     loadUser();
 
