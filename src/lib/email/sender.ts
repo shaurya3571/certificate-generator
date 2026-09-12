@@ -1,14 +1,16 @@
 import { Resend } from "resend";
 
-const apiKey = process.env.RESEND_API_KEY;
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
 
-if (!apiKey) {
-  throw new Error(
-    "RESEND_API_KEY is not configured.",
-  );
+  if (!apiKey) {
+    throw new Error(
+      "RESEND_API_KEY is not configured.",
+    );
+  }
+
+  return new Resend(apiKey);
 }
-
-const resend = new Resend(apiKey);
 
 export interface SendEmailInput {
   to: string;
@@ -33,6 +35,7 @@ export interface SendCertificateEmailInput {
 export async function sendEmail(
   input: SendEmailInput,
 ) {
+  const resend = getResendClient();
   const from =
     process.env.RESEND_FROM_EMAIL ??
     "Certificate Generator <onboarding@resend.dev>";
@@ -54,6 +57,7 @@ export async function sendEmail(
 export async function sendCertificateEmail(
   input: SendCertificateEmailInput,
 ) {
+  const resend = getResendClient();
   const from =
     process.env.RESEND_FROM_EMAIL ??
     "Certificate Generator <onboarding@resend.dev>";
