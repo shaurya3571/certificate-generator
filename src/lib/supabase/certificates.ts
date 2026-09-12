@@ -93,3 +93,24 @@ export async function saveCertificates(
 
   return data as DatabaseCertificate[];
 }
+export async function updateCertificateEmailStatus(
+  certificateId: string,
+  status: "pending" | "sent" | "failed",
+  errorMessage: string | null = null,
+): Promise<DatabaseCertificate> {
+  const { data, error } = await supabase
+    .from("certificates")
+    .update({
+      email_status: status,
+      email_error: errorMessage,
+    })
+    .eq("certificate_id", certificateId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as DatabaseCertificate;
+}
