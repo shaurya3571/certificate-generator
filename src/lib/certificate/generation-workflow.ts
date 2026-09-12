@@ -27,6 +27,7 @@ export interface GenerateAndSaveInput {
   eventName: string;
   template: TemplateType;
   participants: Participant[];
+  organizerId: string;
 }
 
 export interface GeneratedDatabaseCertificate {
@@ -49,6 +50,10 @@ export async function generateAndSaveCertificates(
     throw new Error("Event name is required.");
   }
 
+  if (!input.organizerId.trim()) {
+    throw new Error("Organizer ID is required.");
+  }
+
   if (input.participants.length === 0) {
     throw new Error("No participants available.");
   }
@@ -56,6 +61,7 @@ export async function generateAndSaveCertificates(
   const event = await createEvent({
     name: input.eventName,
     template: input.template,
+    organizerId: input.organizerId,
   });
 
   const savedParticipants =

@@ -1,6 +1,7 @@
-"use client";
 
-import { useEffect } from "react";
+"use client";
+import { useEffect, useState } from "react";
+import { createEvent } from "@/lib/supabase/events";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -10,11 +11,63 @@ export default function OrganizerPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
+  const [eventName, setEventName] =
+    useState("");
+
+  const [template, setTemplate] =
+    useState<"classic" | "modern">("classic");
+
+  const [creatingEvent, setCreatingEvent] =
+    useState(false);
+
+  const [eventError, setEventError] =
+    useState<string | null>(null);
+
+  const [eventCreated, setEventCreated] =
+    useState(false);
+
   useEffect(() => {
     if (!loading && !user) {
       router.replace("/login");
     }
   }, [loading, user, router]);
+
+  const handleCreateEvent = async () => {
+    if (!user) {
+      return;
+    }
+
+    if (!eventName.trim()) {
+      setEventError(
+        "Event name is required.",
+      );
+      return;
+    }
+
+    setCreatingEvent(true);
+    setEventError(null);
+    setEventCreated(false);
+
+    try {
+      await createEvent({
+        name: eventName,
+        template,
+        organizerId: user.id,
+      });
+
+      setEventName("");
+      setTemplate("classic");
+      setEventCreated(true);
+    } catch (err) {
+      setEventError(
+        err instanceof Error
+          ? err.message
+          : "Unable to create event.",
+      );
+    } finally {
+      setCreatingEvent(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -95,6 +148,95 @@ export default function OrganizerPage() {
             Your events and certificate activity will
             appear here.
           </p>
+
+          <div className="mt-5 rounded-xl border border-gray-200 p-5">
+            <h3 className="text-base font-semibold text-gray-900">
+              Create Event
+            </h3>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label
+                  htmlFor="eventName"
+                  className="mb-2 block text-sm font-medium text-gray-800"
+                >
+                  Event Name
+                </label>
+
+                <input
+                  id="eventName"
+                  type="text"
+                  value={eventName}
+                  onChange={(event) =>
+                    setEventName(event.target.value)
+                  }
+                  placeholder="e.g. Tech Fest 2026"
+                  disabled={creatingEvent}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="template"
+                  className="mb-2 block text-sm font-medium text-gray-800"
+                >
+                  Template
+                </label>
+
+                <select
+                  id="template"
+                  value={template}
+                  onChange={(event) =>
+                    setTemplate(
+                      event.target.value as
+                        | "classic"
+                        | "modern",
+                    )
+                  }
+                  disabled={creatingEvent}
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-gray-500 disabled:bg-gray-100"
+                >
+                  <option value="classic">
+                    Classic
+                  </option>
+
+                  <option value="modern">
+                    Modern
+                  </option>
+                </select>
+              </div>
+
+              {eventError && (
+                <p
+                  role="alert"
+                  className="text-sm text-red-600"
+                >
+                  {eventError}
+                </p>
+              )}
+
+              {eventCreated && (
+                <p
+                  role="status"
+                  className="text-sm text-green-600"
+                >
+                  Event created successfully.
+                </p>
+              )}
+
+              <button
+                type="button"
+                onClick={handleCreateEvent}
+                disabled={creatingEvent}
+                className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+              >
+                {creatingEvent
+                  ? "Creating event..."
+                  : "Create Event"}
+              </button>
+            </div>
+          </div>
 
           <div className="mt-5 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
             <p className="text-sm font-medium text-gray-700">
