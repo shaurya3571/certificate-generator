@@ -29,32 +29,6 @@ export default function Home() {
 
   const [participants, setParticipants] =
     useState<Participant[]>([]);
-
-  const hasEventName = eventName.trim().length > 0;
-
-  const hasTemplate =
-    selectedTemplate !== null &&
-    (selectedTemplate !== "custom" || customTemplate !== null);
-
-  const hasParticipantsFile = participantsFile !== null;
-
-  const hasParticipants = participants.length > 0;
-
-  const isReady =
-    hasEventName &&
-    hasTemplate &&
-    hasParticipantsFile &&
-    hasParticipants;
-
-  const handleGenerate = () => {
-    if (!isReady) {
-      return;
-    }
-
-    // Actual certificate generation will be implemented in a later step.
-    console.log("Ready to generate certificates.");
-  };
-
   return (
     <>
       <Header />
