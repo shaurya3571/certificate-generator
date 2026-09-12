@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 interface CreateEventRequest {
   name: string;
   template: TemplateType;
+  organizerId: string;
 }
 
 export async function POST(request: Request) {
@@ -19,6 +20,15 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: "Event name is required.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (!body.organizerId?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Organizer ID is required.",
         },
         { status: 400 },
       );
@@ -40,6 +50,7 @@ export async function POST(request: Request) {
     const event = await createEvent({
       name: body.name,
       template: body.template,
+      organizerId: body.organizerId,
     });
 
     return NextResponse.json({

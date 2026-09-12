@@ -15,6 +15,7 @@ interface GenerateRequest {
   eventName: string;
   template: TemplateType;
   participants: Participant[];
+  organizerId: string;
 }
 
 export async function POST(request: Request) {
@@ -26,6 +27,15 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: "Event name is required.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (!body.organizerId?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Organizer ID is required.",
         },
         { status: 400 },
       );
@@ -60,6 +70,7 @@ export async function POST(request: Request) {
         eventName: body.eventName,
         template: body.template,
         participants: body.participants,
+        organizerId: body.organizerId,
       });
 
     return NextResponse.json({

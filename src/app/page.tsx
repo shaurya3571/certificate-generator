@@ -98,6 +98,7 @@ export default function Home() {
               template={selectedTemplate}
               participants={participants}
             />
+        
           </div>
         </section>
       </PageContainer>
