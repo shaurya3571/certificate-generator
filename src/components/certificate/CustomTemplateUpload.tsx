@@ -6,6 +6,8 @@ interface CustomTemplateUploadProps {
   file: File | null;
   onFileChange: (file: File | null) => void;
   onTemplateSelect: () => void;
+  isAuthenticated: boolean;
+  onAuthRequired: () => void;
 }
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -30,6 +32,8 @@ export default function CustomTemplateUpload({
   file,
   onFileChange,
   onTemplateSelect,
+  isAuthenticated,
+  onAuthRequired,
 }: CustomTemplateUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
@@ -64,6 +68,12 @@ export default function CustomTemplateUpload({
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      event.target.value = "";
+      return;
+    }
+
     handleFile(event.target.files?.[0]);
 
     // Allows selecting the same file again after removing it.
@@ -84,7 +94,21 @@ export default function CustomTemplateUpload({
     event.preventDefault();
     setIsDragging(false);
 
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
     handleFile(event.dataTransfer.files?.[0]);
+  };
+
+  const handleUploadClick = () => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
+    inputRef.current?.click();
   };
 
   const handleRemove = () => {
@@ -107,10 +131,11 @@ export default function CustomTemplateUpload({
         <div
           role="button"
           tabIndex={0}
-          onClick={() => inputRef.current?.click()}
+          onClick={handleUploadClick}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
-              inputRef.current?.click();
+              event.preventDefault();
+              handleUploadClick();
             }
           }}
           onDragOver={handleDragOver}

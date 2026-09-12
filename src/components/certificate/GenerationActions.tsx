@@ -13,6 +13,8 @@ interface GenerationActionsProps {
   eventName: string;
   template: TemplateType | null;
   participants: Participant[];
+  isAuthenticated: boolean;
+  onAuthRequired: () => void;
 }
 
 type GenerationStatus =
@@ -25,6 +27,8 @@ export function GenerationActions({
   eventName,
   template,
   participants,
+  isAuthenticated,
+  onAuthRequired,
 }: GenerationActionsProps) {
   const [status, setStatus] =
     useState<GenerationStatus>("idle");
@@ -42,6 +46,11 @@ export function GenerationActions({
     participants.length > 0;
 
   const handleGenerate = async () => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
     if (!canGenerate || !template) {
       return;
     }

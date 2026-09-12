@@ -11,12 +11,16 @@ interface ParticipantsUploadProps {
   participants: Participant[];
   onParticipantsChange: (participants: Participant[]) => void;
   onFileChange?: (file: File | null) => void;
+  isAuthenticated: boolean;
+  onAuthRequired: () => void;
 }
 
 export function ParticipantsUpload({
   participants,
   onParticipantsChange,
   onFileChange,
+  isAuthenticated,
+  onAuthRequired,
 }: ParticipantsUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -56,6 +60,8 @@ export function ParticipantsUpload({
       <CsvUploader
         file={file}
         onFileChange={handleFileChange}
+        isAuthenticated={isAuthenticated}
+        onAuthRequired={onAuthRequired}
       />
 
       {isParsing && (

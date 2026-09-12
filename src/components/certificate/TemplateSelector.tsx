@@ -9,6 +9,8 @@ interface TemplateSelectorProps {
   customTemplate: File | null;
   onTemplateChange: (template: TemplateType) => void;
   onCustomTemplateChange: (file: File | null) => void;
+  isAuthenticated: boolean;
+  onAuthRequired: () => void;
 }
 
 const templates = [
@@ -32,9 +34,20 @@ export default function TemplateSelector({
   customTemplate,
   onTemplateChange,
   onCustomTemplateChange,
+  isAuthenticated,
+  onAuthRequired,
 }: TemplateSelectorProps) {
   const handleCustomTemplateSelect = () => {
     onTemplateChange("custom");
+  };
+
+  const handleChooseCustom = () => {
+    if (!isAuthenticated) {
+      onAuthRequired();
+      return;
+    }
+
+    handleCustomTemplateSelect();
   };
 
   return (
@@ -89,7 +102,7 @@ export default function TemplateSelector({
           {!customTemplate && (
             <button
               type="button"
-              onClick={handleCustomTemplateSelect}
+              onClick={handleChooseCustom}
               className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${
                 selectedTemplate === "custom"
                   ? "border-slate-900 bg-slate-900 text-white"
@@ -105,6 +118,8 @@ export default function TemplateSelector({
 
         <CustomTemplateUpload
           file={customTemplate}
+          isAuthenticated={isAuthenticated}
+          onAuthRequired={onAuthRequired}
          onFileChange={(file) => {
   onCustomTemplateChange(file);
 
