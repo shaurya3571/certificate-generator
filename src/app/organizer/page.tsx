@@ -1,12 +1,19 @@
 
 "use client";
-import { useEffect, useState } from "react";
-import { createEvent } from "@/lib/supabase/events";
+import {
+  useEffect,
+  useState,
+} from "react";
+import {
+  createEvent,
+  getOrganizerEvents,
+} from "@/lib/supabase/events";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
-import { getOrganizerEvents } from "@/lib/supabase/events";
+import { EventList } from "@/components/organizer/EventList";
+import type { Event } from "@/types/database";
 export default function OrganizerPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -26,6 +33,15 @@ export default function OrganizerPage() {
   const [eventCreated, setEventCreated] =
     useState(false);
 
+  const [events, setEvents] =
+    useState<Event[]>([]);
+
+  const [eventsLoading, setEventsLoading] =
+    useState(true);
+
+  const [eventsError, setEventsError] =
+    useState<string | null>(null);
+
   useEffect(() => {
     if (!loading && !user) {
       router.replace("/login");
@@ -36,11 +52,22 @@ export default function OrganizerPage() {
     if (!user) return;
 
     const loadEvents = async () => {
+      setEventsLoading(true);
+      setEventsError(null);
+
       try {
-        const events = await getOrganizerEvents(user.id);
-        console.log("Organizer events:", events);
+        const organizerEvents =
+          await getOrganizerEvents(user.id);
+
+        setEvents(organizerEvents);
       } catch (error) {
-        console.error("Unable to load organizer events:", error);
+        setEventsError(
+          error instanceof Error
+            ? error.message
+            : "Unable to load events.",
+        );
+      } finally {
+        setEventsLoading(false);
       }
     };
 
@@ -64,12 +91,16 @@ export default function OrganizerPage() {
     setEventCreated(false);
 
     try {
-      await createEvent({
+      const createdEvent = await createEvent({
         name: eventName,
         template,
         organizerId: user.id,
       });
 
+      setEvents((currentEvents) => [
+        createdEvent,
+        ...currentEvents,
+      ]);
       setEventName("");
       setTemplate("classic");
       setEventCreated(true);
@@ -129,7 +160,7 @@ export default function OrganizerPage() {
             </p>
 
             <p className="mt-2 text-2xl font-bold text-gray-900">
-              0
+              {events.length}
             </p>
           </div>
 
@@ -253,15 +284,28 @@ export default function OrganizerPage() {
             </div>
           </div>
 
-          <div className="mt-5 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-            <p className="text-sm font-medium text-gray-700">
-              No events yet
-            </p>
+          <div className="mt-5">
+            {eventsLoading && (
+              <div
+                role="status"
+                className="rounded-2xl border border-gray-200 bg-white p-6 text-sm text-gray-500"
+              >
+                Loading events...
+              </div>
+            )}
 
-            <p className="mt-1 text-sm text-gray-500">
-              Event management will be connected in
-              the next step.
-            </p>
+            {eventsError && (
+              <p
+                role="alert"
+                className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700"
+              >
+                {eventsError}
+              </p>
+            )}
+
+            {!eventsLoading && !eventsError && (
+              <EventList events={events} />
+            )}
           </div>
         </section>
       </div>
