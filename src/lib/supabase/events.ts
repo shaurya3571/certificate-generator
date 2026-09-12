@@ -2,6 +2,9 @@ import { supabase } from "@/lib/supabase/client";
 
 import type { TemplateType } from "@/types/certificate";
 import type { Event } from "@/types/database";
+import {
+  getSupabaseErrorMessage,
+} from "@/lib/supabase/errors";
 
 export interface CreateEventInput {
   name: string;
@@ -21,8 +24,13 @@ export async function createEvent(
     .single();
 
   if (error) {
-    throw new Error(error.message);
-  }
+  throw new Error(
+    getSupabaseErrorMessage(
+      error,
+      "Unable to create event.",
+    ),
+  );
+}
 
   return data as Event;
 }

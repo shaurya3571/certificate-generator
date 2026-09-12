@@ -2,6 +2,9 @@ import { supabase } from "@/lib/supabase/client";
 
 import type { Participant } from "@/types/certificate";
 import type { DatabaseParticipant } from "@/types/database";
+import {
+  getSupabaseErrorMessage,
+} from "@/lib/supabase/errors";
 
 export interface SaveParticipantsInput {
   eventId: string;
@@ -27,8 +30,13 @@ export async function saveParticipants(
     .select();
 
   if (error) {
-    throw new Error(error.message);
-  }
+  throw new Error(
+    getSupabaseErrorMessage(
+      error,
+      "Unable to save participants.",
+    ),
+  );
+}
 
   return data as DatabaseParticipant[];
 }

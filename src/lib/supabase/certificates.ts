@@ -3,6 +3,9 @@
 import type {
   DatabaseCertificate,
 } from "@/types/database";
+import {
+  getSupabaseErrorMessage,
+} from "@/lib/supabase/errors";
 
 export interface SaveCertificateInput {
   eventId: string;
@@ -109,8 +112,13 @@ export async function updateCertificateEmailStatus(
     .single();
 
   if (error) {
-    throw new Error(error.message);
-  }
+  throw new Error(
+    getSupabaseErrorMessage(
+      error,
+      "Unable to save certificate data.",
+    ),
+  );
+}
 
   return data as DatabaseCertificate;
 }
