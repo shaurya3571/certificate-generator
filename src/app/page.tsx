@@ -10,6 +10,7 @@ import TemplateSelector from "@/components/certificate/TemplateSelector";
 import StepIndicator from "@/components/certificate/StepIndicator";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
+import { EmailActions } from "@/components/certificate/EmailActions";
 import type {
   Participant,
   TemplateType,
@@ -29,6 +30,7 @@ export default function Home() {
 
   const [participants, setParticipants] =
     useState<Participant[]>([]);
+
   return (
     <>
       <Header />
@@ -87,6 +89,11 @@ export default function Home() {
 
             {/* Step 04 */}
             <GenerationActions
+              eventName={eventName}
+              template={selectedTemplate}
+              participants={participants}
+            />
+            <EmailActions
               eventName={eventName}
               template={selectedTemplate}
               participants={participants}
