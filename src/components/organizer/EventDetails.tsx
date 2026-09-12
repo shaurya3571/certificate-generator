@@ -28,6 +28,9 @@ export function EventDetails({
   const [savingParticipants, setSavingParticipants] =
     useState(false);
 
+  const [loadingParticipants, setLoadingParticipants] =
+    useState(false);
+
   const [participantMessage, setParticipantMessage] =
     useState<string | null>(null);
 
@@ -52,6 +55,7 @@ export function EventDetails({
 
     setParticipantMessage(null);
     setParticipantError(null);
+    setLoadingParticipants(true);
 
     try {
       const text = await file.text();
@@ -91,6 +95,8 @@ export function EventDetails({
           ? error.message
           : "Unable to read participants CSV.",
       );
+    } finally {
+      setLoadingParticipants(false);
     }
   };
 
@@ -127,6 +133,10 @@ export function EventDetails({
   };
 
   const handleGenerateCertificates = async () => {
+    if (generatingCertificates) {
+      return;
+    }
+
     setGeneratingCertificates(true);
     setGenerationMessage(null);
     setGenerationError(null);
@@ -267,6 +277,7 @@ export function EventDetails({
               type="file"
               accept=".csv"
               onChange={handleParticipantsFile}
+              disabled={loadingParticipants}
               className="block w-full text-sm text-gray-600"
             />
           </div>
@@ -302,30 +313,31 @@ export function EventDetails({
           <button
             type="button"
             onClick={handleSaveParticipants}
-            disabled={
-              savingParticipants ||
-              participants.length === 0
-            }
+            disabled={savingParticipants}
             className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {savingParticipants
-              ? "Saving..."
+              ? "Saving participants..."
               : "Save Participants"}
           </button>
 
           {participantMessage && (
-            <p className="mt-3 text-sm text-green-600">
-              {participantMessage}
-            </p>
+            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
+              <p className="text-sm font-medium text-green-700">
+                {participantMessage}
+              </p>
+            </div>
           )}
 
           {participantError && (
-            <p
+            <div
               role="alert"
-              className="mt-3 text-sm text-red-600"
+              className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3"
             >
-              {participantError}
-            </p>
+              <p className="text-sm font-medium text-red-700">
+                {participantError}
+              </p>
+            </div>
           )}
         </div>
 
@@ -341,27 +353,34 @@ export function EventDetails({
           <button
             type="button"
             onClick={handleGenerateCertificates}
-            disabled={generatingCertificates}
+            disabled={
+              generatingCertificates ||
+              participants.length === 0
+            }
             className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {generatingCertificates
-              ? "Generating..."
+              ? "Generating certificates..."
               : "Generate Certificates"}
           </button>
 
           {generationMessage && (
-            <p className="mt-3 text-sm text-green-600">
-              {generationMessage}
-            </p>
+            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
+              <p className="text-sm font-medium text-green-700">
+                {generationMessage}
+              </p>
+            </div>
           )}
 
           {generationError && (
-            <p
+            <div
               role="alert"
-              className="mt-3 text-sm text-red-600"
+              className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3"
             >
-              {generationError}
-            </p>
+              <p className="text-sm font-medium text-red-700">
+                {generationError}
+              </p>
+            </div>
           )}
         </div>
       </div>
