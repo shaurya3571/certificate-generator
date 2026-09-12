@@ -1,5 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
-
+import {
+  validateCredentials,
+} from "@/lib/auth/validation";
 export interface SignUpInput {
   email: string;
   password: string;
@@ -13,6 +15,16 @@ export interface SignInInput {
 export async function signUp(
   input: SignUpInput,
 ) {
+  const validationError =
+    validateCredentials(
+      input.email,
+      input.password,
+    );
+
+  if (validationError) {
+    throw new Error(validationError);
+  }
+
   const { data, error } =
     await supabase.auth.signUp({
       email: input.email.trim(),
@@ -29,6 +41,16 @@ export async function signUp(
 export async function signIn(
   input: SignInInput,
 ) {
+  const validationError =
+    validateCredentials(
+      input.email,
+      input.password,
+    );
+
+  if (validationError) {
+    throw new Error(validationError);
+  }
+
   const { data, error } =
     await supabase.auth.signInWithPassword({
       email: input.email.trim(),
