@@ -171,9 +171,12 @@ export function EventDetails({
       const zipData =
         await createCertificatesZip(certificates);
 
-      const blob = new Blob([zipData], {
-        type: "application/zip",
-      });
+      const blob = new Blob(
+        [new Uint8Array(zipData)],
+        {
+          type: "application/zip",
+        },
+      );
 
       const url = URL.createObjectURL(blob);
 
