@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
-import PageContainer from "@/components/layout/PageContainer";
 
 export default function ParticipantDashboardPage() {
   const router = useRouter();
@@ -35,50 +34,82 @@ export default function ParticipantDashboardPage() {
   }
 
   return (
-    <PageContainer>
-      <div className="mx-auto max-w-3xl space-y-6">
-        <header className="flex flex-col gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
+    <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-8">
+        <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-slate-500">
               Participant portal
             </p>
 
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">
-              Participant Dashboard
+              Your certificates
             </h1>
 
-            <p className="text-sm text-slate-500">
-              Signed in as
-            </p>
-
-            <p className="mt-1 font-semibold text-slate-950">
-              {user.email}
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              View and download certificates associated with your account.
             </p>
           </div>
 
           <LogoutButton redirectTo="/participant/login" />
+          </div>
         </header>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-950">
-            Your certificates
-          </h2>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-500">
+                Account
+              </p>
 
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Certificates associated with your account will appear here.
-          </p>
+              <h2 className="mt-1 text-xl font-bold text-slate-950">
+                Signed in
+              </h2>
 
-          <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-            <p className="text-sm font-semibold text-slate-700">
-              No certificates yet
+              <p className="mt-2 break-all text-sm text-slate-600">
+                {user.email}
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-slate-50 px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Status
+              </p>
+
+              <p className="mt-1 text-sm font-semibold text-slate-950">
+                Active
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="mb-6">
+            <p className="text-sm font-semibold text-slate-500">
+              Certificate library
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Your certificates will appear here when they are available.
+            <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">
+              Your certificates
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Certificates issued to this email address will appear here.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
+            <h3 className="text-sm font-semibold text-slate-950">
+              No certificates yet
+            </h3>
+
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              Once a certificate is issued to your email address, it will appear in this section.
             </p>
           </div>
         </section>
       </div>
-    </PageContainer>
+    </main>
   );
 }
