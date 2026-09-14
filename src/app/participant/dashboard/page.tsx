@@ -1,20 +1,69 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import {
+  getParticipantCertificates,
+} from "@/lib/supabase/participant-certificates";
+
+import type {
+  ParticipantCertificate,
+} from "@/types/database";
 
 export default function ParticipantDashboardPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const [certificates, setCertificates] =
+    useState<ParticipantCertificate[]>([]);
+
+  const [certificatesLoading, setCertificatesLoading] =
+    useState(true);
+
+  const [certificatesError, setCertificatesError] =
+    useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
       router.replace("/participant/login");
     }
   }, [loading, user, router]);
+
+  useEffect(() => {
+    if (!user?.email) {
+      return;
+    }
+
+    const userEmail = user.email;
+
+    const loadCertificates = async () => {
+      setCertificatesLoading(true);
+      setCertificatesError(null);
+
+      try {
+        const participantCertificates =
+          await getParticipantCertificates(
+            userEmail,
+          );
+
+        setCertificates(
+          participantCertificates,
+        );
+      } catch (error) {
+        setCertificatesError(
+          error instanceof Error
+            ? error.message
+            : "Unable to load certificates.",
+        );
+      } finally {
+        setCertificatesLoading(false);
+      }
+    };
+
+    loadCertificates();
+  }, [user]);
 
   if (loading) {
     return (
@@ -99,15 +148,63 @@ export default function ParticipantDashboardPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
-            <h3 className="text-sm font-semibold text-slate-950">
-              No certificates yet
-            </h3>
+          {certificatesLoading && (
+            <div
+              role="status"
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
+            >
+              Loading certificates...
+            </div>
+          )}
 
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-              Once a certificate is issued to your email address, it will appear in this section.
-            </p>
-          </div>
+          {certificatesError && (
+            <div
+              role="alert"
+              className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              {certificatesError}
+            </div>
+          )}
+
+          {!certificatesLoading &&
+            !certificatesError &&
+            certificates.length === 0 && (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
+                <h3 className="text-sm font-semibold text-slate-950">
+                  No certificates yet
+                </h3>
+
+                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                  Certificates issued to your email address will appear here.
+                </p>
+              </div>
+            )}
+
+          {!certificatesLoading &&
+            !certificatesError &&
+            certificates.length > 0 && (
+              <div className="space-y-3">
+                {certificates.map((certificate) => (
+                  <div
+                    key={certificate.id}
+                    className="rounded-2xl border border-slate-200 bg-white p-5"
+                  >
+                    <p className="text-sm font-semibold text-slate-500">
+                      {certificate.event_name}
+                    </p>
+
+                    <h3 className="mt-1 font-bold text-slate-950">
+                      {certificate.file_name}
+                    </h3>
+
+                    <p className="mt-2 text-xs text-slate-500">
+                      Certificate ID:{" "}
+                      {certificate.certificate_id}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
         </section>
       </div>
     </main>

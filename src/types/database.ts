@@ -27,3 +27,15 @@ export interface DatabaseCertificate {
   email_error: string | null;
   created_at: string;
 }
+
+export interface ParticipantCertificate {
+  id: string;
+  event_id: string;
+  participant_id: string;
+  certificate_id: string;
+  file_name: string;
+  email_status: EmailStatus;
+  email_error: string | null;
+  created_at: string;
+  event_name: string;
+}
