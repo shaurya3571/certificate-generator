@@ -52,7 +52,7 @@ export default function VerifyPage() {
 
   return (
     <PageContainer>
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto w-full max-w-2xl">
         <div className="mb-8 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
             Certificate Verification
@@ -68,7 +68,7 @@ export default function VerifyPage() {
           </p>
         </div>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           <div>
             <label
               htmlFor="certificate-id"
@@ -95,7 +95,7 @@ export default function VerifyPage() {
               autoComplete="off"
               aria-invalid={Boolean(error)}
               aria-describedby={error ? "certificate-id-error" : undefined}
-              className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm uppercase text-slate-950 outline-none transition placeholder:normal-case placeholder:text-slate-400 focus:border-slate-950 focus:ring-2 focus:ring-slate-200"
+              className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm uppercase text-slate-950 outline-none transition placeholder:normal-case placeholder:text-slate-400 focus:border-slate-950 focus:ring-2 focus:ring-slate-200"
             />
 
             {error && (
@@ -113,7 +113,7 @@ export default function VerifyPage() {
             type="button"
             onClick={handleVerify}
             disabled={verifying}
-            className="mt-4 w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-4 min-h-12 w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {verifying ? "Verifying..." : "Verify Certificate"}
           </button>
