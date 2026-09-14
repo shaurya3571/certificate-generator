@@ -19,16 +19,14 @@ export default function ParticipantDashboardPage() {
 
   if (loading) {
     return (
-      <PageContainer>
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
         <div
           role="status"
-          className="flex min-h-[calc(100vh-170px)] items-center justify-center"
+          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
         >
-          <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-            Checking your session...
-          </p>
+          Checking your session...
         </div>
-      </PageContainer>
+      </main>
     );
   }
 
@@ -49,8 +47,12 @@ export default function ParticipantDashboardPage() {
               Participant Dashboard
             </h1>
 
-            <p className="mt-2 text-sm text-slate-600">
-              Signed in as {user.email}
+            <p className="text-sm text-slate-500">
+              Signed in as
+            </p>
+
+            <p className="mt-1 font-semibold text-slate-950">
+              {user.email}
             </p>
           </div>
 
