@@ -13,7 +13,7 @@ export async function getParticipantCertificates(
   const { data: participants, error: participantsError } =
     await supabase
       .from("participants")
-      .select("id, event_id")
+      .select("id, event_id, name")
       .eq("email", normalizedEmail);
 
   if (participantsError) {
@@ -30,6 +30,13 @@ export async function getParticipantCertificates(
 
   const eventIds = participants.map(
     (participant) => participant.event_id,
+  );
+
+  const participantNames = new Map(
+    participants.map((participant) => [
+      participant.id,
+      participant.name,
+    ]),
   );
 
   const { data: certificates, error: certificatesError } =
@@ -51,24 +58,33 @@ export async function getParticipantCertificates(
   const { data: events, error: eventsError } =
     await supabase
       .from("events")
-      .select("id, name")
+      .select("id, name, template")
       .in("id", eventIds);
 
   if (eventsError) {
     throw new Error(eventsError.message);
   }
 
-  const eventNames = new Map(
+  const eventDetails = new Map(
     (events ?? []).map((event) => [
       event.id,
-      event.name,
+      {
+        name: event.name,
+        template: event.template,
+      },
     ]),
   );
 
-  return certificates.map((certificate) => ({
-    ...certificate,
-    event_name:
-      eventNames.get(certificate.event_id) ??
-      "Unknown event",
-  }));
+  return certificates.map((certificate) => {
+    const event = eventDetails.get(certificate.event_id);
+
+    return {
+      ...certificate,
+      event_name: event?.name ?? "Unknown event",
+      participant_name:
+        participantNames.get(certificate.participant_id) ??
+        "Unknown participant",
+      template: event?.template ?? "classic",
+    };
+  });
 }

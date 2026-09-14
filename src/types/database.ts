@@ -38,4 +38,6 @@ export interface ParticipantCertificate {
   email_error: string | null;
   created_at: string;
   event_name: string;
+  participant_name: string;
+  template: "classic" | "modern" | "custom";
 }

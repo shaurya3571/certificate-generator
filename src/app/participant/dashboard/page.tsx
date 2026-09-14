@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { downloadCertificate } from "@/lib/certificate/download";
 import { groupCertificatesByEvent } from "@/lib/certificate/group";
+import { generateCertificate } from "@/lib/certificate/generator";
 import {
   getParticipantCertificates,
 } from "@/lib/supabase/participant-certificates";
@@ -20,11 +22,38 @@ export default function ParticipantDashboardPage() {
   const [certificates, setCertificates] =
     useState<ParticipantCertificate[]>([]);
 
+  const [downloadingId, setDownloadingId] =
+    useState<string | null>(null);
+
   const [certificatesLoading, setCertificatesLoading] =
     useState(true);
 
   const [certificatesError, setCertificatesError] =
     useState<string | null>(null);
+
+  const handleDownload = async (
+    certificate: ParticipantCertificate,
+  ) => {
+    setDownloadingId(certificate.id);
+
+    try {
+      const data = await generateCertificate({
+        eventName: certificate.event_name,
+        participantName: certificate.participant_name,
+        certificateId: certificate.certificate_id,
+        template: certificate.template,
+      });
+
+      downloadCertificate(data, certificate.file_name);
+    } catch (error) {
+      console.error(
+        "Unable to download certificate:",
+        error,
+      );
+    } finally {
+      setDownloadingId(null);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -199,16 +228,30 @@ export default function ParticipantDashboardPage() {
                       {group.certificates.map((certificate) => (
                         <div
                           key={certificate.id}
-                          className="rounded-2xl border border-slate-200 bg-white p-5"
+                          className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between"
                         >
-                          <h4 className="font-bold text-slate-950">
-                            {certificate.file_name}
-                          </h4>
+                          <div className="min-w-0">
+                            <h4 className="break-words font-semibold text-slate-950">
+                              {certificate.file_name}
+                            </h4>
 
-                          <p className="mt-2 text-xs text-slate-500">
-                            Certificate ID:{" "}
-                            {certificate.certificate_id}
-                          </p>
+                            <p className="mt-2 break-all text-xs text-slate-500">
+                              Certificate ID: {certificate.certificate_id}
+                            </p>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDownload(certificate)
+                            }
+                            disabled={downloadingId === certificate.id}
+                            className="shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                          >
+                            {downloadingId === certificate.id
+                              ? "Preparing..."
+                              : "Download"}
+                          </button>
                         </div>
                       ))}
                     </div>
