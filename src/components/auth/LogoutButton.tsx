@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { signOut } from "@/lib/supabase/auth";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  redirectTo?: string;
+}
+
+export function LogoutButton({
+  redirectTo = "/login",
+}: LogoutButtonProps) {
   const router = useRouter();
 
   const [loading, setLoading] =
@@ -21,7 +27,7 @@ export function LogoutButton() {
     try {
       await signOut();
 
-      router.push("/login");
+      router.push(redirectTo);
       router.refresh();
     } catch (err) {
       setError(

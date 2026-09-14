@@ -309,7 +309,7 @@ export function EmailActions({
                     {item.participant.name}
                   </p>
 
-                  <p className="text-xs text-gray-500">
+                  <p className="break-all text-xs text-gray-500">
                     {item.participant.email}
                   </p>
 

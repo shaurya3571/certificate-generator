@@ -197,7 +197,7 @@ export default function Home() {
               <Link
                 href="/login"
                 onClick={() => setShowAuthPrompt(false)}
-                className="flex-1 rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="flex-1 rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
               >
                 Log In
               </Link>
@@ -205,7 +205,7 @@ export default function Home() {
               <Link
                 href="/signup"
                 onClick={() => setShowAuthPrompt(false)}
-                className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+                className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
               >
                 Sign Up
               </Link>
@@ -214,7 +214,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setShowAuthPrompt(false)}
-              className="mt-4 w-full text-center text-sm font-medium text-slate-500 hover:text-slate-900"
+              className="mt-4 w-full rounded-xl px-4 py-2 text-center text-sm font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             >
               Continue browsing
             </button>

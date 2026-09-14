@@ -179,7 +179,7 @@ export default function OrganizerPage() {
               Selected Event
             </p>
 
-            <p className="mt-2 truncate text-lg font-bold text-slate-950">
+            <p className="mt-2 break-words text-lg font-bold text-slate-950">
               {selectedEvent?.name ?? "None"}
             </p>
 

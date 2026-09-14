@@ -331,10 +331,10 @@ export function EventDetails({
                   (participant, index) => (
                     <div
                       key={`${participant.email}-${index}`}
-                      className="text-sm text-gray-700"
+                      className="break-words text-sm text-gray-700"
                     >
                       {participant.name} — {" "}
-                      {participant.email}
+                      <span className="break-all">{participant.email}</span>
                     </div>
                   ),
                 )}
@@ -360,7 +360,10 @@ export function EventDetails({
           </button>
 
           {participantMessage && (
-            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+            <div
+              role="status"
+              className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3"
+            >
               <p className="text-sm font-medium text-emerald-700">
                 {participantMessage}
               </p>
@@ -403,7 +406,10 @@ export function EventDetails({
           </button>
 
           {generationMessage && (
-            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+            <div
+              role="status"
+              className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3"
+            >
               <p className="text-sm font-medium text-emerald-700">
                 {generationMessage}
               </p>
