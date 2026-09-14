@@ -128,7 +128,17 @@ export async function POST(request: Request) {
     const sent = results.filter((r) => r.success).length;
     const failed = results.length - sent;
 
-    return NextResponse.json({ sent, failed });
+    return NextResponse.json({
+      sent,
+      failed,
+      // Per-recipient breakdown so the client can show exactly which
+      // addresses failed and display the Resend error reason.
+      results: results.map((r) => ({
+        email: r.email,
+        success: r.success,
+        ...(r.error ? { error: r.error } : {}),
+      })),
+    });
   } catch (error) {
     return NextResponse.json(
       {

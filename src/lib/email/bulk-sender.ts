@@ -16,6 +16,8 @@ export interface BulkCertificateEmailInput {
   eventName: string;
   template: TemplateType;
   participants: BulkEmailParticipant[];
+  subject?: string;
+  message?: string;
 }
 
 export interface EmailSendResult {
@@ -67,6 +69,8 @@ export async function sendBulkCertificateEmails(
         certificateId,
         certificatePdf,
         fileName,
+        subject: input.subject,
+        message: input.message,
       });
 
       results.push({

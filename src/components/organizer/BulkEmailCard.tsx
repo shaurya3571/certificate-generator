@@ -328,7 +328,7 @@ export function BulkEmailCard() {
                 {`{{name}}`}
               </code>{" "}
               to personalise. Falls back to{" "}
-              <em>"there"</em> when a name isn't provided.
+              <em>&quot;there&quot;</em> when a name isn&apos;t provided.
             </p>
           </div>
 
