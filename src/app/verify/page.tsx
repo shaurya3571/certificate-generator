@@ -9,6 +9,7 @@ export default function VerifyPage() {
   const [certificateId, setCertificateId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [certificate, setCertificate] =
     useState<Awaited<ReturnType<typeof getCertificateById>>>(null);
 
@@ -27,11 +28,17 @@ export default function VerifyPage() {
 
     setError(null);
     setCertificate(null);
+    setNotFound(false);
     setVerifying(true);
 
     try {
       const result = await getCertificateById(normalizedId);
-      setCertificate(result);
+
+      if (result) {
+        setCertificate(result);
+      } else {
+        setNotFound(true);
+      }
     } catch (error) {
       setError(
         error instanceof Error
@@ -137,6 +144,22 @@ export default function VerifyPage() {
                   {new Date(certificate.created_at).toLocaleDateString()}
                 </p>
               </div>
+            </div>
+          )}
+
+          {notFound && (
+            <div
+              role="alert"
+              className="mt-6 rounded-2xl border border-slate-200 bg-white p-5"
+            >
+              <p className="text-sm font-semibold text-slate-900">
+                Certificate Not Found
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                We couldn&apos;t find a certificate with that ID. Please check
+                the certificate ID and try again.
+              </p>
             </div>
           )}
         </section>
