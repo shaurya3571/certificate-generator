@@ -34,13 +34,19 @@ export async function saveParticipants(
     .select();
 
   if (error) {
-  throw new Error(
-    getSupabaseErrorMessage(
-      error,
-      "Unable to save participants.",
-    ),
-  );
-}
+    if (error.code === "23505") {
+      throw new Error(
+        "One or more participants already exist for this event.",
+      );
+    }
+
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save participants.",
+      ),
+    );
+  }
 
   return data as DatabaseParticipant[];
 }
