@@ -25,6 +25,9 @@ export default function ParticipantDashboardPage() {
   const [downloadingId, setDownloadingId] =
     useState<string | null>(null);
 
+  const [downloadError, setDownloadError] =
+    useState<string | null>(null);
+
   const [certificatesLoading, setCertificatesLoading] =
     useState(true);
 
@@ -34,6 +37,7 @@ export default function ParticipantDashboardPage() {
   const handleDownload = async (
     certificate: ParticipantCertificate,
   ) => {
+    setDownloadError(null);
     setDownloadingId(certificate.id);
 
     try {
@@ -46,9 +50,10 @@ export default function ParticipantDashboardPage() {
 
       downloadCertificate(data, certificate.file_name);
     } catch (error) {
-      console.error(
-        "Unable to download certificate:",
-        error,
+      setDownloadError(
+        error instanceof Error
+          ? error.message
+          : "Unable to download certificate.",
       );
     } finally {
       setDownloadingId(null);
@@ -100,9 +105,15 @@ export default function ParticipantDashboardPage() {
       <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
         <div
           role="status"
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
+          className="rounded-2xl border border-slate-200 bg-white px-6 py-5 text-center shadow-sm"
         >
-          Checking your session...
+          <p className="text-sm font-semibold text-slate-900">
+            Checking your session...
+          </p>
+
+          <p className="mt-1 text-xs text-slate-500">
+            Please wait a moment.
+          </p>
         </div>
       </main>
     );
@@ -182,29 +193,58 @@ export default function ParticipantDashboardPage() {
             </p>
           </div>
 
+          {downloadError && (
+            <div
+              role="alert"
+              className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700"
+            >
+              {downloadError}
+            </div>
+          )}
+
           {certificatesLoading && (
             <div
               role="status"
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-6"
             >
-              Loading certificates...
+              <div className="animate-pulse space-y-3">
+                <div className="h-4 w-32 rounded bg-slate-200" />
+                <div className="h-3 w-56 rounded bg-slate-200" />
+                <div className="h-10 w-full rounded-xl bg-slate-200" />
+              </div>
+
+              <p className="mt-4 text-sm text-slate-500">
+                Loading certificates...
+              </p>
             </div>
           )}
 
           {certificatesError && (
             <div
               role="alert"
-              className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+              className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4"
             >
-              {certificatesError}
+              <p className="text-sm font-semibold text-red-800">
+                Unable to load certificates
+              </p>
+
+              <p className="mt-1 text-sm leading-6 text-red-700">
+                {certificatesError}
+              </p>
             </div>
           )}
 
           {!certificatesLoading &&
             !certificatesError &&
             certificates.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
-                <h3 className="text-sm font-semibold text-slate-950">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm ring-1 ring-slate-200">
+                  <span className="text-lg font-bold">
+                    —
+                  </span>
+                </div>
+
+                <h3 className="mt-4 text-sm font-semibold text-slate-950">
                   No certificates yet
                 </h3>
 
