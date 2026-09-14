@@ -55,7 +55,12 @@ export async function saveCertificate(
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save certificate.",
+      ),
+    );
   }
 
   return data as DatabaseCertificate;
@@ -96,7 +101,12 @@ export async function saveCertificates(
     .select();
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save certificates.",
+      ),
+    );
   }
 
   return data as DatabaseCertificate[];
