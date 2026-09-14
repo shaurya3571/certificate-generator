@@ -138,73 +138,87 @@ export default function OrganizerPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto max-w-6xl space-y-8">
+        <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">
-              Organizer Dashboard
+            <p className="text-sm font-semibold text-slate-500">
+              Organizer workspace
             </p>
 
-            <h1 className="mt-1 text-2xl font-bold text-gray-900">
-              Welcome back
+            <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">
+              Organizer Dashboard
             </h1>
 
-            <p className="mt-1 text-sm text-gray-600">
-              {user.email}
+            <p className="mt-2 text-sm text-slate-500">
+              Manage your events and certificates from one place.
             </p>
           </div>
 
           <LogoutButton />
+          </div>
         </header>
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <p className="text-sm text-gray-500">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
               Events
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
+            <p className="mt-2 text-3xl font-bold text-slate-950">
               {events.length}
             </p>
-          </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <p className="text-sm text-gray-500">
-              Participants
-            </p>
-
-            <p className="mt-2 text-2xl font-bold text-gray-900">
-              0
+            <p className="mt-1 text-xs text-slate-500">
+              Created by you
             </p>
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <p className="text-sm text-gray-500">
-              Certificates
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
+              Selected Event
             </p>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
-              0
+            <p className="mt-2 truncate text-lg font-bold text-slate-950">
+              {selectedEvent?.name ?? "None"}
+            </p>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Currently selected
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
+              Workspace
+            </p>
+
+            <p className="mt-2 text-lg font-bold text-slate-950">
+              Ready
+            </p>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Manage your certificate workflow
             </p>
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Certificate Management
-          </h2>
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div>
+            <p className="text-sm font-semibold text-slate-500">
+              New event
+            </p>
 
-          <p className="mt-2 text-sm text-gray-600">
-            Your events and certificate activity will
-            appear here.
-          </p>
+            <h2 className="mt-1 text-xl font-bold text-slate-950">
+              Create an event
+            </h2>
 
-          <div className="mt-5 rounded-xl border border-gray-200 p-5">
-            <h3 className="text-base font-semibold text-gray-900">
-              Create Event
-            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Set the event name and certificate template.
+            </p>
+          </div>
 
-            <div className="mt-4 space-y-4">
+            <div className="mt-6 space-y-4">
               <div>
                 <label
                   htmlFor="eventName"
@@ -286,13 +300,30 @@ export default function OrganizerPage() {
                   : "Create Event"}
               </button>
             </div>
+        </section>
+
+        <section>
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-500">
+                Workspace
+              </p>
+
+              <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">
+                Your Events
+              </h2>
+            </div>
+
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+              {events.length} {events.length === 1 ? "event" : "events"}
+            </span>
           </div>
 
-          <div className="mt-5">
+          <div>
             {eventsLoading && (
               <div
                 role="status"
-                className="rounded-2xl border border-gray-200 bg-white p-6 text-sm text-gray-500"
+                className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
               >
                 Loading events...
               </div>
