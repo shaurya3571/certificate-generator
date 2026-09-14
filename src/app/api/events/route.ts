@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { createEvent } from "@/lib/supabase/events";
+import {
+  createSupabaseServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/server";
 import type { TemplateType } from "@/types/certificate";
 
 export const runtime = "nodejs";
@@ -13,6 +17,19 @@ interface CreateEventRequest {
 
 export async function POST(request: Request) {
   try {
+    const { user, accessToken } =
+      await getAuthenticatedUser(request);
+
+    if (!user || !accessToken) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
+    const serverSupabase =
+      createSupabaseServerClient(accessToken);
+
     const body =
       (await request.json()) as CreateEventRequest;
 
@@ -20,15 +37,6 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: "Event name is required.",
-        },
-        { status: 400 },
-      );
-    }
-
-    if (!body.organizerId?.trim()) {
-      return NextResponse.json(
-        {
-          error: "Organizer ID is required.",
         },
         { status: 400 },
       );
@@ -47,11 +55,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const event = await createEvent({
-      name: body.name,
-      template: body.template,
-      organizerId: body.organizerId,
-    });
+    const event = await createEvent(
+      {
+        name: body.name,
+        template: body.template,
+        organizerId: user.id,
+      },
+      serverSupabase,
+    );
 
     return NextResponse.json({
       success: true,

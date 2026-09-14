@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import {
   generateAndSaveCertificates,
 } from "@/lib/certificate/generation-workflow";
+import {
+  createSupabaseServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/server";
 
 import type {
   Participant,
@@ -20,6 +24,19 @@ interface GenerateRequest {
 
 export async function POST(request: Request) {
   try {
+    const { user, accessToken } =
+      await getAuthenticatedUser(request);
+
+    if (!user || !accessToken) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
+    const serverSupabase =
+      createSupabaseServerClient(accessToken);
+
     const body =
       (await request.json()) as GenerateRequest;
 
@@ -27,15 +44,6 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: "Event name is required.",
-        },
-        { status: 400 },
-      );
-    }
-
-    if (!body.organizerId?.trim()) {
-      return NextResponse.json(
-        {
-          error: "Organizer ID is required.",
         },
         { status: 400 },
       );
@@ -66,12 +74,15 @@ export async function POST(request: Request) {
     }
 
     const result =
-      await generateAndSaveCertificates({
-        eventName: body.eventName,
-        template: body.template,
-        participants: body.participants,
-        organizerId: body.organizerId,
-      });
+      await generateAndSaveCertificates(
+        {
+          eventName: body.eventName,
+          template: body.template,
+          participants: body.participants,
+          organizerId: user.id,
+        },
+        serverSupabase,
+      );
 
     return NextResponse.json({
       success: true,

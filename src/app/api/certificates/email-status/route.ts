@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import {
   updateCertificateEmailStatus,
 } from "@/lib/supabase/certificates";
+import {
+  createSupabaseServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -14,6 +18,19 @@ interface EmailStatusRequest {
 
 export async function PATCH(request: Request) {
   try {
+    const { user, accessToken } =
+      await getAuthenticatedUser(request);
+
+    if (!user || !accessToken) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
+    const serverSupabase =
+      createSupabaseServerClient(accessToken);
+
     const body =
       (await request.json()) as EmailStatusRequest;
 
@@ -44,6 +61,7 @@ export async function PATCH(request: Request) {
         body.certificateId,
         body.status,
         body.error ?? null,
+        serverSupabase,
       );
 
     return NextResponse.json({

@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import {
   saveCertificates,
 } from "@/lib/supabase/certificates";
+import {
+  createSupabaseServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -17,6 +21,19 @@ interface CertificateRequest {
 
 export async function POST(request: Request) {
   try {
+    const { user, accessToken } =
+      await getAuthenticatedUser(request);
+
+    if (!user || !accessToken) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
+    const serverSupabase =
+      createSupabaseServerClient(accessToken);
+
     const body =
       (await request.json()) as CertificateRequest;
 
@@ -71,18 +88,21 @@ export async function POST(request: Request) {
     }
 
     const certificates =
-      await saveCertificates([
-        {
-          eventId: body.eventId,
-          participantId: body.participantId,
-          certificateId: body.certificateId,
-          fileName: body.fileName,
-          emailStatus:
-            body.emailStatus ?? "pending",
-          emailError:
-            body.emailError ?? null,
-        },
-      ]);
+      await saveCertificates(
+        [
+          {
+            eventId: body.eventId,
+            participantId: body.participantId,
+            certificateId: body.certificateId,
+            fileName: body.fileName,
+            emailStatus:
+              body.emailStatus ?? "pending",
+            emailError:
+              body.emailError ?? null,
+          },
+        ],
+        serverSupabase,
+      );
 
     return NextResponse.json({
       success: true,
