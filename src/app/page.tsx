@@ -101,54 +101,70 @@ export default function Home() {
 
           {/* Workflow */}
           <div className="space-y-5">
-            {/* Step 01 */}
-            <EventDetails
-              eventName={eventName}
-              onEventNameChange={setEventName}
-            />
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <EventDetails
+                eventName={eventName}
+                onEventNameChange={setEventName}
+              />
+            </section>
 
-            {/* Step 02 */}
-            <TemplateSelector
-              selectedTemplate={selectedTemplate}
-              customTemplate={customTemplate}
-              onTemplateChange={setSelectedTemplate}
-              onCustomTemplateChange={setCustomTemplate}
-              isAuthenticated={Boolean(user)}
-              onAuthRequired={handleAuthRequired}
-            />
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <TemplateSelector
+                selectedTemplate={selectedTemplate}
+                customTemplate={customTemplate}
+                onTemplateChange={setSelectedTemplate}
+                onCustomTemplateChange={setCustomTemplate}
+                isAuthenticated={Boolean(user)}
+                onAuthRequired={handleAuthRequired}
+              />
+            </section>
 
-            {/* Step 03 */}
-            <ParticipantsUpload
-              participants={participants}
-              onParticipantsChange={setParticipants}
-              onFileChange={setParticipantsFile}
-              isAuthenticated={Boolean(user)}
-              onAuthRequired={handleAuthRequired}
-            />
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <ParticipantsUpload
+                participants={participants}
+                onParticipantsChange={setParticipants}
+                onFileChange={setParticipantsFile}
+                isAuthenticated={Boolean(user)}
+                onAuthRequired={handleAuthRequired}
+              />
+            </section>
 
-            {/* Generation checklist */}
-            <FormReadiness
-              eventName={eventName}
-              selectedTemplate={selectedTemplate}
-              customTemplate={customTemplate}
-              participantsFile={participantsFile}
-              participantCount={participants.length}
-            />
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <FormReadiness
+                eventName={eventName}
+                selectedTemplate={selectedTemplate}
+                customTemplate={customTemplate}
+                participantsFile={participantsFile}
+                participantCount={participants.length}
+              />
+            </section>
 
-            {/* Step 04 */}
-            <GenerationActions
-              eventName={eventName}
-              template={selectedTemplate}
-              participants={participants}
-              isAuthenticated={Boolean(user)}
-              onAuthRequired={handleAuthRequired}
-            />
-            <EmailActions
-              eventName={eventName}
-              template={selectedTemplate}
-              participants={participants}
-            />
-        
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-5">
+                <h2 className="text-lg font-bold tracking-tight text-slate-950">
+                  Generation and email
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Generate certificates and send them to participants.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                <GenerationActions
+                  eventName={eventName}
+                  template={selectedTemplate}
+                  participants={participants}
+                  isAuthenticated={Boolean(user)}
+                  onAuthRequired={handleAuthRequired}
+                />
+                <EmailActions
+                  eventName={eventName}
+                  template={selectedTemplate}
+                  participants={participants}
+                />
+              </div>
+            </section>
           </div>
         </section>
       </PageContainer>

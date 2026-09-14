@@ -65,7 +65,7 @@ export function ParticipantsUpload({
       />
 
       {isParsing && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
           <p className="text-sm text-gray-600">
             Processing participant CSV...
           </p>
@@ -73,15 +73,15 @@ export function ParticipantsUpload({
       )}
 
       {!isParsing && hasParticipants && !hasErrors && (
-        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-          <p className="text-sm font-medium text-green-700">
-            ✓ All {participants.length} participants are valid.
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+          <p className="text-sm font-medium text-emerald-700">
+            All {participants.length} participants are valid.
           </p>
         </div>
       )}
 
       {!isParsing && hasErrors && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
           <div className="flex items-start gap-3">
             <div className="mt-0.5 text-red-600">!</div>
 
@@ -104,7 +104,7 @@ export function ParticipantsUpload({
                 {errors.map((error, index) => (
                   <div
                     key={`${error}-${index}`}
-                    className="rounded-md border border-red-100 bg-white px-3 py-2 text-sm text-red-700"
+                    className="rounded-xl border border-red-100 bg-white px-3 py-2 text-sm text-red-700"
                   >
                     {error}
                   </div>
@@ -118,7 +118,7 @@ export function ParticipantsUpload({
       <ParticipantPreview participants={participants} />
 
       {!isParsing && !hasParticipants && !hasErrors && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-4 text-sm text-slate-500">
           <p className="text-sm text-gray-500">
             Upload a CSV file to preview participants.
           </p>

@@ -141,7 +141,7 @@ export default function CustomTemplateUpload({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition ${
+          className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${
             isDragging
               ? "border-slate-900 bg-slate-100"
               : "border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50"
@@ -199,7 +199,7 @@ export default function CustomTemplateUpload({
             <button
               type="button"
               onClick={handleRemove}
-              className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-900"
+              className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             >
               Remove
             </button>
@@ -217,7 +217,7 @@ export default function CustomTemplateUpload({
 
       {error && (
         <div
-          className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
           role="alert"
         >
           {error}

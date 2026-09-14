@@ -152,7 +152,7 @@ export default function CsvUploader({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 ${
             isDragging
               ? "border-slate-900 bg-slate-100"
               : "border-slate-300 bg-slate-50 hover:border-slate-400 hover:bg-white"
@@ -234,7 +234,7 @@ export default function CsvUploader({
 
       {error && (
         <div
-          className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
           role="alert"
         >
           {error}

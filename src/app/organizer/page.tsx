@@ -121,10 +121,10 @@ export default function OrganizerPage() {
 
  if (loading) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div
         role="status"
-        className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm text-gray-600 shadow-sm"
+        className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
       >
         Checking your session...
       </div>
@@ -137,7 +137,7 @@ export default function OrganizerPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -222,7 +222,7 @@ export default function OrganizerPage() {
               <div>
                 <label
                   htmlFor="eventName"
-                  className="mb-2 block text-sm font-medium text-gray-800"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
                 >
                   Event Name
                 </label>
@@ -236,14 +236,14 @@ export default function OrganizerPage() {
                   }
                   placeholder="e.g. Tech Fest 2026"
                   disabled={creatingEvent}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:bg-slate-100"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="template"
-                  className="mb-2 block text-sm font-medium text-gray-800"
+                  className="mb-2 block text-sm font-semibold text-slate-700"
                 >
                   Template
                 </label>
@@ -259,7 +259,7 @@ export default function OrganizerPage() {
                     )
                   }
                   disabled={creatingEvent}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none focus:border-gray-500 disabled:bg-gray-100"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:bg-slate-100"
                 >
                   <option value="classic">
                     Classic
@@ -274,7 +274,7 @@ export default function OrganizerPage() {
               {eventError && (
                 <p
                   role="alert"
-                  className="text-sm text-red-600"
+                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                 >
                   {eventError}
                 </p>
@@ -283,7 +283,7 @@ export default function OrganizerPage() {
               {eventCreated && (
                 <p
                   role="status"
-                  className="text-sm text-green-600"
+                  className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
                 >
                   Event created successfully.
                 </p>
@@ -293,7 +293,7 @@ export default function OrganizerPage() {
                 type="button"
                 onClick={handleCreateEvent}
                 disabled={creatingEvent}
-                className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+                className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {creatingEvent
                   ? "Creating event..."
@@ -323,7 +323,7 @@ export default function OrganizerPage() {
             {eventsLoading && (
               <div
                 role="status"
-                className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"
               >
                 Loading events...
               </div>
@@ -332,7 +332,7 @@ export default function OrganizerPage() {
             {eventsError && (
               <p
                 role="alert"
-                className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700"
+                className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               >
                 {eventsError}
               </p>

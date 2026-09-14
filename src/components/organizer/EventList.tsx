@@ -25,9 +25,9 @@ export function EventList({
         </div>
 
         <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-          <p className="font-semibold text-slate-900">
-            No events yet
-          </p>
+          <h3 className="text-sm font-semibold text-slate-900">
+            Nothing here yet
+          </h3>
 
           <p className="mt-1 text-sm text-slate-500">
             Create your first event above to start generating certificates.
@@ -64,7 +64,7 @@ export function EventList({
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-slate-900" />
 
-                  <h3 className="truncate font-semibold text-slate-950">
+                  <h3 className="break-words font-semibold text-slate-950">
                     {event.name}
                   </h3>
                 </div>

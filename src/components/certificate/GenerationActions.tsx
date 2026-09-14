@@ -135,7 +135,7 @@ const blob = new Blob([arrayBuffer], {
         type="button"
         onClick={handleGenerate}
         disabled={!canGenerate || status === "generating"}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "generating" && (
           <span
@@ -198,7 +198,7 @@ const blob = new Blob([arrayBuffer], {
             <button
               type="button"
               onClick={handleDownload}
-              className="rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800"
+              className="rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             >
               Download ZIP
             </button>
@@ -206,7 +206,7 @@ const blob = new Blob([arrayBuffer], {
             <button
               type="button"
               onClick={handleReset}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             >
               Generate Again
             </button>
@@ -241,7 +241,7 @@ const blob = new Blob([arrayBuffer], {
           <button
             type="button"
             onClick={handleGenerate}
-            className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50"
+            className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
           >
             Try Again
           </button>

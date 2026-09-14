@@ -226,7 +226,7 @@ export function EmailActions({
         disabled={
           !canSend || status === "sending"
         }
-        className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "sending" && (
           <span
@@ -324,7 +324,7 @@ export function EmailActions({
           <button
             type="button"
             onClick={handleRetryFailed}
-            className="mt-4 rounded-lg border border-yellow-300 bg-white px-4 py-2 text-sm font-semibold text-yellow-800 transition hover:bg-yellow-50"
+            className="mt-4 rounded-lg border border-yellow-300 bg-white px-4 py-2 text-sm font-semibold text-yellow-800 transition hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
           >
             Retry Failed Emails
           </button>
@@ -348,7 +348,7 @@ export function EmailActions({
           <button
             type="button"
             onClick={handleSendEmails}
-            className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50"
+            className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
           >
             Try Again
           </button>

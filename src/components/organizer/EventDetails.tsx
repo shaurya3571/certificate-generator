@@ -259,7 +259,7 @@ export function EventDetails({
           </span>
         </div>
 
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-950">
+        <h2 className="mt-4 break-words text-3xl font-bold tracking-tight text-slate-950">
           {event.name}
         </h2>
 
@@ -316,7 +316,7 @@ export function EventDetails({
               accept=".csv"
               onChange={handleParticipantsFile}
               disabled={loadingParticipants}
-              className="block w-full text-sm text-gray-600"
+              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             />
           </div>
 
@@ -352,7 +352,7 @@ export function EventDetails({
             type="button"
             onClick={handleSaveParticipants}
             disabled={savingParticipants}
-            className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="mt-4 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {savingParticipants
               ? "Saving participants..."
@@ -360,8 +360,8 @@ export function EventDetails({
           </button>
 
           {participantMessage && (
-            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
-              <p className="text-sm font-medium text-green-700">
+            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+              <p className="text-sm font-medium text-emerald-700">
                 {participantMessage}
               </p>
             </div>
@@ -395,7 +395,7 @@ export function EventDetails({
               generatingCertificates ||
               participants.length === 0
             }
-            className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="mt-4 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {generatingCertificates
               ? "Generating certificates..."
@@ -403,8 +403,8 @@ export function EventDetails({
           </button>
 
           {generationMessage && (
-            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
-              <p className="text-sm font-medium text-green-700">
+            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+              <p className="text-sm font-medium text-emerald-700">
                 {generationMessage}
               </p>
             </div>
