@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { groupCertificatesByEvent } from "@/lib/certificate/group";
 import {
   getParticipantCertificates,
 } from "@/lib/supabase/participant-certificates";
@@ -81,6 +82,10 @@ export default function ParticipantDashboardPage() {
   if (!user) {
     return null;
   }
+
+  const certificateGroups = Object.values(
+    groupCertificatesByEvent(certificates),
+  );
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
@@ -183,25 +188,31 @@ export default function ParticipantDashboardPage() {
           {!certificatesLoading &&
             !certificatesError &&
             certificates.length > 0 && (
-              <div className="space-y-3">
-                {certificates.map((certificate) => (
-                  <div
-                    key={certificate.id}
-                    className="rounded-2xl border border-slate-200 bg-white p-5"
-                  >
-                    <p className="text-sm font-semibold text-slate-500">
-                      {certificate.event_name}
-                    </p>
-
-                    <h3 className="mt-1 font-bold text-slate-950">
-                      {certificate.file_name}
+              <div className="space-y-8">
+                {certificateGroups.map((group) => (
+                  <section key={group.eventId} className="space-y-3">
+                    <h3 className="text-lg font-bold text-slate-950">
+                      {group.eventName}
                     </h3>
 
-                    <p className="mt-2 text-xs text-slate-500">
-                      Certificate ID:{" "}
-                      {certificate.certificate_id}
-                    </p>
-                  </div>
+                    <div className="space-y-3">
+                      {group.certificates.map((certificate) => (
+                        <div
+                          key={certificate.id}
+                          className="rounded-2xl border border-slate-200 bg-white p-5"
+                        >
+                          <h4 className="font-bold text-slate-950">
+                            {certificate.file_name}
+                          </h4>
+
+                          <p className="mt-2 text-xs text-slate-500">
+                            Certificate ID:{" "}
+                            {certificate.certificate_id}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 ))}
               </div>
             )}
