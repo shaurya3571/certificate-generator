@@ -8,6 +8,7 @@ import { signIn } from "@/lib/supabase/auth";
 import {
   validateCredentials,
 } from "@/lib/auth/validation";
+import PageContainer from "@/components/layout/PageContainer";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,101 +63,102 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-12">
-      <div className="mx-auto max-w-md">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Organizer Login
-            </h1>
+    <PageContainer>
+      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center">
+        <div className="w-full max-w-md">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div className="mb-8">
+              <p className="text-sm font-semibold text-slate-500">
+                Organizer workspace
+              </p>
 
-            <p className="mt-2 text-sm text-gray-600">
-              Log in to manage your certificate
-              events.
-            </p>
-          </div>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
+                Welcome back
+              </h1>
 
-          {error && (
-            <div
-              role="alert"
-              className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4"
-            >
-              <p className="text-sm text-red-700">
-                {error}
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Log in to manage your events and certificates.
               </p>
             </div>
-          )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5"
-          >
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-gray-800"
+            {error && (
+              <div
+                role="alert"
+                className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               >
-                Email
-              </label>
+                {error}
+              </div>
+            )}
 
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(event) =>
-                  setEmail(event.target.value)
-                }
-                placeholder="you@example.com"
-                autoComplete="email"
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+            >
+              <div>
+                <label
+                  htmlFor="email"
+                  className="text-sm font-semibold text-slate-700"
+                >
+                  Email
+                </label>
+
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(event) =>
+                    setEmail(event.target.value)
+                  }
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  disabled={loading}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="text-sm font-semibold text-slate-700"
+                >
+                  Password
+                </label>
+
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(event) =>
+                    setPassword(event.target.value)
+                  }
+                  placeholder="Your password"
+                  autoComplete="current-password"
+                  disabled={loading}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                />
+              </div>
+
+              <button
+                type="submit"
                 disabled={loading}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-medium text-gray-800"
+                className="w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Password
-              </label>
+                {loading ? "Logging in..." : "Log In"}
+              </button>
+            </form>
 
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(event) =>
-                  setPassword(event.target.value)
-                }
-                placeholder="Your password"
-                autoComplete="current-password"
-                disabled={loading}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
-              />
+            <div className="mt-6 text-center text-sm text-slate-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/signup"
+                className="font-semibold text-slate-950 underline-offset-4 transition hover:underline focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+              >
+                Sign up
+              </Link>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
-            >
-              {loading
-                ? "Logging in..."
-                : "Log In"}
-            </button>
-          </form>
-
-          <p className="mt-4 text-center text-sm text-gray-500">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="font-semibold text-gray-900 hover:underline"
-            >
-              Sign Up
-            </Link>
-          </p>
+          </div>
         </div>
       </div>
-    </main>
+    </PageContainer>
   );
 }

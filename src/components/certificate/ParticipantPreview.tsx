@@ -9,10 +9,10 @@ export function ParticipantPreview({
 }: ParticipantPreviewProps) {
   if (participants.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-        <p className="text-sm font-medium text-gray-700">
-          No valid participants found
-        </p>
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
+        <h3 className="text-sm font-semibold text-slate-900">
+          Nothing here yet
+        </h3>
 
         <p className="mt-1 text-sm text-gray-500">
           Upload a valid CSV file to preview participants.

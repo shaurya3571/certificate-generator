@@ -7,6 +7,7 @@ import { signUp } from "@/lib/supabase/auth";
 import {
   validateCredentials,
 } from "@/lib/auth/validation";
+import PageContainer from "@/components/layout/PageContainer";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -68,117 +69,119 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-12">
-      <div className="mx-auto max-w-md">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Create Organizer Account
-            </h1>
-
-            <p className="mt-2 text-sm text-gray-600">
-              Create an account to manage your
-              certificate events.
-            </p>
-          </div>
-
-          {success && (
-            <div
-              role="status"
-              className="mb-6 rounded-xl border border-green-200 bg-green-50 p-4"
-            >
-              <p className="text-sm font-semibold text-green-800">
-                Account created successfully.
+    <PageContainer>
+      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center">
+        <div className="w-full max-w-md">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div className="mb-8">
+              <p className="text-sm font-semibold text-slate-500">
+                Organizer workspace
               </p>
 
-              <p className="mt-1 text-sm text-green-700">
-                Please check your email to
-                confirm your account.
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
+                Create your account
+              </h1>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Sign up to create and manage your certificate events.
               </p>
             </div>
-          )}
 
-          {error && (
-            <div
-              role="alert"
-              className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4"
-            >
-              <p className="text-sm text-red-700">
+            {success && (
+              <div
+                role="status"
+                className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+              >
+                <p className="font-semibold">
+                  Account created successfully.
+                </p>
+
+                <p className="mt-1">
+                  Please check your email to confirm your account.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <div
+                role="alert"
+                className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+              >
                 {error}
-              </p>
-            </div>
-          )}
+              </div>
+            )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5"
-          >
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-gray-800"
-              >
-                Email
-              </label>
-
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(event) =>
-                  setEmail(event.target.value)
-                }
-                placeholder="you@example.com"
-                autoComplete="email"
-                disabled={loading}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-medium text-gray-800"
-              >
-                Password
-              </label>
-
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(event) =>
-                  setPassword(event.target.value)
-                }
-                placeholder="At least 6 characters"
-                autoComplete="new-password"
-                disabled={loading}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 disabled:bg-gray-100"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
             >
-              {loading
-                ? "Creating account..."
-                : "Create Account"}
-            </button>
-          </form>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="text-sm font-semibold text-slate-700"
+                >
+                  Email
+                </label>
 
-          <p className="mt-4 text-center text-sm text-gray-500">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-gray-900 hover:underline"
-            >
-              Log In
-            </Link>
-          </p>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(event) =>
+                    setEmail(event.target.value)
+                  }
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  disabled={loading}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="text-sm font-semibold text-slate-700"
+                >
+                  Password
+                </label>
+
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(event) =>
+                    setPassword(event.target.value)
+                  }
+                  placeholder="At least 6 characters"
+                  autoComplete="new-password"
+                  disabled={loading}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading
+                  ? "Creating account..."
+                  : "Create Account"}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-slate-600">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-slate-950 underline-offset-4 transition hover:underline focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+              >
+                Log in
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </main>
+    </PageContainer>
   );
 }

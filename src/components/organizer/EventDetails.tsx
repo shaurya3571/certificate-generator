@@ -239,41 +239,51 @@ export function EventDetails({
   };
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6">
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <button
         type="button"
         onClick={onBack}
-        className="text-sm font-semibold text-gray-600 transition hover:text-gray-900"
+        className="inline-flex items-center rounded-lg px-2 py-1 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
       >
         ← Back to Events
       </button>
 
-      <div className="mt-6">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-          Event Details
-        </p>
+      <div className="mt-7">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">
+            {event.template} template
+          </span>
 
-        <h2 className="mt-2 text-2xl font-bold text-gray-900">
+          <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+            Selected
+          </span>
+        </div>
+
+        <h2 className="mt-4 break-words text-3xl font-bold tracking-tight text-slate-950">
           {event.name}
         </h2>
 
+        <p className="mt-2 text-sm text-slate-500">
+          Manage participants and generate certificates for this event.
+        </p>
+
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-gray-200 p-4">
-            <p className="text-xs text-gray-500">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Template
             </p>
 
-            <p className="mt-1 font-semibold capitalize text-gray-900">
+            <p className="mt-2 font-semibold capitalize text-slate-950">
               {event.template}
             </p>
           </div>
 
-          <div className="rounded-xl border border-gray-200 p-4">
-            <p className="text-xs text-gray-500">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Created
             </p>
 
-            <p className="mt-1 font-semibold text-gray-900">
+            <p className="mt-2 font-semibold text-slate-950">
               {new Date(
                 event.created_at,
               ).toLocaleDateString()}
@@ -281,38 +291,23 @@ export function EventDetails({
           </div>
         </div>
 
-        <div className="mt-4 rounded-xl border border-gray-200 p-4">
-          <p className="text-xs text-gray-500">
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Event ID
           </p>
 
-          <p className="mt-1 break-all font-mono text-sm text-gray-900">
+          <p className="mt-2 break-all font-mono text-xs text-slate-700">
             {event.id}
           </p>
         </div>
 
-        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <p className="text-xs text-gray-500">
-            Selected Event
-          </p>
-
-          <p className="mt-1 text-sm font-semibold text-gray-900">
-            This event is currently selected.
-          </p>
-
-          <p className="mt-1 text-xs text-gray-500">
-            Participants and certificates will be
-            managed for this event.
-          </p>
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-gray-200 p-5">
-          <h3 className="text-lg font-semibold text-gray-900">
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <h3 className="text-lg font-bold text-slate-950">
             Participants
           </h3>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Upload a CSV containing name and email.
+          <p className="mt-1 text-sm text-slate-500">
+            Upload and save participants for this event.
           </p>
 
           <div className="mt-4">
@@ -321,7 +316,7 @@ export function EventDetails({
               accept=".csv"
               onChange={handleParticipantsFile}
               disabled={loadingParticipants}
-              className="block w-full text-sm text-gray-600"
+              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
             />
           </div>
 
@@ -357,7 +352,7 @@ export function EventDetails({
             type="button"
             onClick={handleSaveParticipants}
             disabled={savingParticipants}
-            className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="mt-4 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {savingParticipants
               ? "Saving participants..."
@@ -365,8 +360,8 @@ export function EventDetails({
           </button>
 
           {participantMessage && (
-            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
-              <p className="text-sm font-medium text-green-700">
+            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+              <p className="text-sm font-medium text-emerald-700">
                 {participantMessage}
               </p>
             </div>
@@ -384,12 +379,12 @@ export function EventDetails({
           )}
         </div>
 
-        <div className="mt-6 rounded-2xl border border-gray-200 p-5">
-          <h3 className="text-lg font-semibold text-gray-900">
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <h3 className="text-lg font-bold text-slate-950">
             Certificates
           </h3>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-500">
             Generate certificates for all saved participants.
           </p>
 
@@ -400,7 +395,7 @@ export function EventDetails({
               generatingCertificates ||
               participants.length === 0
             }
-            className="mt-4 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="mt-4 rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {generatingCertificates
               ? "Generating certificates..."
@@ -408,8 +403,8 @@ export function EventDetails({
           </button>
 
           {generationMessage && (
-            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3">
-              <p className="text-sm font-medium text-green-700">
+            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-3">
+              <p className="text-sm font-medium text-emerald-700">
                 {generationMessage}
               </p>
             </div>
@@ -427,12 +422,16 @@ export function EventDetails({
           )}
         </div>
 
-        <div className="mt-8 border-t border-gray-200 pt-6">
+        <div className="mt-8 border-t border-slate-200 pt-6">
+          <p className="text-xs text-slate-500">
+            Deleting this event also removes its participants and certificates.
+          </p>
+
           <button
             type="button"
             onClick={handleDeleteEvent}
             disabled={deletingEvent}
-            className="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-3 rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {deletingEvent
               ? "Deleting event..."
