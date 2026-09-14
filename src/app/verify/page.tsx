@@ -1,7 +1,36 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import PageContainer from "@/components/layout/PageContainer";
 
 export default function VerifyPage() {
+  const [certificateId, setCertificateId] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
+
+  const handleVerify = async () => {
+    const normalizedId = certificateId.trim().toUpperCase();
+
+    if (!normalizedId) {
+      setError("Certificate ID is required.");
+      return;
+    }
+
+    if (!/^CERT-\d{4}-[A-Z0-9]{6}$/.test(normalizedId)) {
+      setError("Enter a valid certificate ID, such as CERT-2026-305NDF.");
+      return;
+    }
+
+    setError(null);
+    setVerifying(true);
+
+    // Certificate lookup will be added in Step 10C.
+    await new Promise((resolve) => setTimeout(resolve, 700));
+
+    setVerifying(false);
+  };
+
   return (
     <PageContainer>
       <div className="mx-auto max-w-2xl">
@@ -33,16 +62,41 @@ export default function VerifyPage() {
               id="certificate-id"
               name="certificate-id"
               type="text"
+              value={certificateId}
+              onChange={(event) => {
+                setCertificateId(event.target.value);
+                if (error) setError(null);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleVerify();
+                }
+              }}
               placeholder="e.g. CERT-2026-305NDF"
-              className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-950 focus:ring-2 focus:ring-slate-200"
+              autoComplete="off"
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? "certificate-id-error" : undefined}
+              className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm uppercase text-slate-950 outline-none transition placeholder:normal-case placeholder:text-slate-400 focus:border-slate-950 focus:ring-2 focus:ring-slate-200"
             />
+
+            {error && (
+              <p
+                id="certificate-id-error"
+                role="alert"
+                className="mt-2 text-sm font-medium text-red-600"
+              >
+                {error}
+              </p>
+            )}
           </div>
 
           <button
             type="button"
-            className="mt-4 w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+            onClick={handleVerify}
+            disabled={verifying}
+            className="mt-4 w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Verify Certificate
+            {verifying ? "Verifying..." : "Verify Certificate"}
           </button>
         </section>
 
