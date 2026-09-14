@@ -112,8 +112,31 @@ export default function VerifyPage() {
           </button>
 
           {certificate && (
-            <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
-              Certificate found: {certificate.certificate_id}
+            <div
+              role="status"
+              className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+            >
+              <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                Certificate Verified
+              </p>
+
+              <div className="mt-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Certificate ID
+                </p>
+                <p className="mt-1 break-all font-mono text-sm font-semibold text-slate-950">
+                  {certificate.certificate_id}
+                </p>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Issued
+                </p>
+                <p className="mt-1 text-sm font-medium text-slate-900">
+                  {new Date(certificate.created_at).toLocaleDateString()}
+                </p>
+              </div>
             </div>
           )}
         </section>
