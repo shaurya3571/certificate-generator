@@ -13,6 +13,7 @@ import { generateCertificatesForEvent } from "@/lib/certificate/generation-workf
 import { createCertificatesZip } from "@/lib/certificate/zip";
 import type { Participant } from "@/types/certificate";
 import type { Event } from "@/types/database";
+import { BulkEmailCard } from "@/components/organizer/BulkEmailCard";
 
 interface EventDetailsProps {
   event: Event;
@@ -427,6 +428,8 @@ export function EventDetails({
             </div>
           )}
         </div>
+
+        <BulkEmailCard />
 
         <div className="mt-8 border-t border-slate-200 pt-6">
           <p className="text-xs text-slate-500">

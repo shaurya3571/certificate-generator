@@ -1,14 +1,18 @@
 import type { Participant, TemplateType } from "@/types/certificate";
 import { generateCertificate } from "@/lib/certificate/generator";
 import { generateCertificateId } from "@/lib/certificate/id";
-import { sendCertificateEmail } from "./sender";
+import { sendCertificateEmail, sendEmail } from "./sender";
+import type {
+  BulkEmailInput,
+  BulkEmailSendResult,
+} from "./types";
 
 export interface BulkEmailParticipant {
   participant: Participant;
   certificateId?: string;
 }
 
-export interface BulkEmailInput {
+export interface BulkCertificateEmailInput {
   eventName: string;
   template: TemplateType;
   participants: BulkEmailParticipant[];
@@ -22,7 +26,7 @@ export interface EmailSendResult {
 }
 
 export async function sendBulkCertificateEmails(
-  input: BulkEmailInput,
+  input: BulkCertificateEmailInput,
 ): Promise<EmailSendResult[]> {
   const results: EmailSendResult[] = [];
   const usedCertificateIds = new Set<string>();
@@ -79,6 +83,79 @@ export async function sendBulkCertificateEmails(
           error instanceof Error
             ? error.message
             : "Unable to send certificate email.",
+      });
+    }
+  }
+
+  return results;
+}
+
+// ---------------------------------------------------------------------------
+// Generic bulk email (CSV recipients + custom subject/message)
+// ---------------------------------------------------------------------------
+
+/**
+ * Personalises a message template for a single recipient.
+ * Replaces {{name}} with the recipient's name, or "there" as a fallback.
+ */
+function personaliseMessage(
+  message: string,
+  name: string | undefined,
+): string {
+  return message.replace(
+    /\{\{name\}\}/g,
+    name?.trim() || "there",
+  );
+}
+
+/**
+ * Send a custom email to every recipient in the list.
+ *
+ * Each email is sent individually — recipients are never
+ * exposed to each other via CC or BCC.
+ *
+ * Returns a result per recipient indicating success or failure.
+ */
+export async function sendGenericBulkEmails(
+  input: BulkEmailInput,
+): Promise<BulkEmailSendResult[]> {
+  const results: BulkEmailSendResult[] = [];
+
+  for (const recipient of input.recipients) {
+    try {
+      const personalisedMessage = personaliseMessage(
+        input.message,
+        recipient.name,
+      );
+
+      // Convert newlines to <br> for basic HTML rendering.
+      const htmlBody = personalisedMessage
+        .split("\n")
+        .map((line) =>
+          line.trim() === ""
+            ? "<br />"
+            : `<p style="margin:0 0 8px 0">${line}</p>`,
+        )
+        .join("\n");
+
+      await sendEmail({
+        to: recipient.email,
+        subject: input.subject,
+        html: htmlBody,
+      });
+
+      results.push({
+        email: recipient.email,
+        success: true,
+      });
+    } catch (error) {
+      results.push({
+        email: recipient.email,
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to send email.",
       });
     }
   }
