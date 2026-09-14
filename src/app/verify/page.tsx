@@ -121,28 +121,53 @@ export default function VerifyPage() {
           {certificate && (
             <div
               role="status"
-              className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
             >
-              <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-                Certificate Verified
-              </p>
+              <div className="flex items-start gap-4">
+                <div
+                  aria-hidden="true"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-lg font-bold text-white"
+                >
+                  ✓
+                </div>
 
-              <div className="mt-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                  Certificate ID
-                </p>
-                <p className="mt-1 break-all font-mono text-sm font-semibold text-slate-950">
-                  {certificate.certificate_id}
-                </p>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                    Certificate Verified
+                  </p>
+
+                  <h2 className="mt-1 break-words text-2xl font-bold tracking-tight text-slate-950">
+                    {certificate.participant_name}
+                  </h2>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    This certificate was issued for successfully participating in{" "}
+                    <span className="font-semibold text-slate-900">
+                      {certificate.event_name}
+                    </span>
+                    .
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                  Issued
-                </p>
-                <p className="mt-1 text-sm font-medium text-slate-900">
-                  {new Date(certificate.created_at).toLocaleDateString()}
-                </p>
+              <div className="mt-6 grid gap-4 border-t border-slate-200 pt-6 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Certificate ID
+                  </p>
+                  <p className="mt-1 break-all font-mono text-sm font-semibold text-slate-950">
+                    {certificate.certificate_id}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Issued
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-slate-950">
+                    {new Date(certificate.issued_at).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
             </div>
           )}
