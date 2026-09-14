@@ -1,12 +1,10 @@
 import { supabase } from "@/lib/supabase/client";
 
 export interface VerificationCertificate {
-  id: string;
-  event_id: string;
-  participant_id: string;
   certificate_id: string;
-  file_name: string;
-  created_at: string;
+  participant_name: string;
+  event_name: string;
+  issued_at: string;
 }
 
 export async function getCertificateById(
@@ -14,17 +12,13 @@ export async function getCertificateById(
 ): Promise<VerificationCertificate | null> {
   const normalizedId = certificateId.trim().toUpperCase();
 
-  const { data, error } = await supabase
-    .from("certificates")
-    .select(
-      "id, event_id, participant_id, certificate_id, file_name, created_at",
-    )
-    .eq("certificate_id", normalizedId)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("verify_certificate", {
+    lookup_certificate_id: normalizedId,
+  });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return data;
+  return data?.[0] ?? null;
 }
