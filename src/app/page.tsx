@@ -47,28 +47,60 @@ export default function Home() {
       <Header />
 
       <PageContainer>
-        <section className="mx-auto max-w-4xl">
+        <section className="mx-auto max-w-5xl">
           {/* Page heading */}
-          <div className="mb-8">
-            <p className="mb-2 text-sm font-medium text-slate-500">
-              Certificate workspace
-            </p>
+          <div className="mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 shadow-sm sm:px-10 sm:py-14">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
+                Certificate workspace
+              </div>
 
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">
-              Create certificates
-            </h2>
+              <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                Create certificates
+                <span className="block text-slate-500">
+                  without the busywork.
+                </span>
+              </h1>
 
-            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
-              Generate personalized certificates for your event using a
-              template and participant list.
-            </p>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+                Generate personalized certificates for your event
+                using a template and participant list.
+              </p>
 
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#certificate-workflow"
+                  className="rounded-xl bg-slate-950 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                >
+                  Start Creating
+                </a>
+
+                <Link
+                  href="/organizer"
+                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                >
+                  Organizer Dashboard
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <StepIndicator />
+          <div id="certificate-workflow">
+            <StepIndicator />
+          </div>
+
+          <div className="mb-5">
+            <h2 className="text-xl font-bold tracking-tight text-slate-950">
+              Certificate workflow
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Follow the steps below to prepare and generate your certificates.
+            </p>
+          </div>
 
           {/* Workflow */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Step 01 */}
             <EventDetails
               eventName={eventName}
