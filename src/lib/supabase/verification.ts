@@ -1,4 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
+import {
+  getSupabaseErrorMessage,
+} from "@/lib/supabase/errors";
 
 export interface VerificationCertificate {
   certificate_id: string;
@@ -17,7 +20,12 @@ export async function getCertificateById(
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to verify the certificate.",
+      ),
+    );
   }
 
   return data?.[0] ?? null;

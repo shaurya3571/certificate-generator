@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { saveParticipants } from "@/lib/supabase/participants";
+import {
+  createSupabaseServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/server";
 import type { Participant } from "@/types/certificate";
 
 export const runtime = "nodejs";
@@ -12,6 +16,19 @@ interface SaveParticipantsRequest {
 
 export async function POST(request: Request) {
   try {
+    const { user, accessToken } =
+      await getAuthenticatedUser(request);
+
+    if (!user || !accessToken) {
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 },
+      );
+    }
+
+    const serverSupabase =
+      createSupabaseServerClient(accessToken);
+
     const body =
       (await request.json()) as SaveParticipantsRequest;
 
@@ -37,10 +54,13 @@ export async function POST(request: Request) {
     }
 
     const participants =
-      await saveParticipants({
-        eventId: body.eventId,
-        participants: body.participants,
-      });
+      await saveParticipants(
+        {
+          eventId: body.eventId,
+          participants: body.participants,
+        },
+        serverSupabase,
+      );
 
     return NextResponse.json({
       success: true,

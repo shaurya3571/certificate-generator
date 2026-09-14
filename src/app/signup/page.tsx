@@ -73,18 +73,27 @@ export default function SignupPage() {
       <div className="flex min-h-[calc(100vh-170px)] items-center justify-center">
         <div className="w-full max-w-md">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="mb-8">
-              <p className="text-sm font-semibold text-slate-500">
-                Organizer workspace
-              </p>
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-slate-500">
+                  Organizer workspace
+                </p>
 
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
-                Create your account
-              </h1>
+                <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
+                  Create your account
+                </h1>
 
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Sign up to create and manage your certificate events.
-              </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Sign up to create and manage your certificate events.
+                </p>
+              </div>
+
+              <Link
+                href="/"
+                className="shrink-0 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+              >
+                Home
+              </Link>
             </div>
 
             {success && (
@@ -170,6 +179,15 @@ export default function SignupPage() {
               </button>
             </form>
 
+            <div className="mt-6">
+              <Link
+                href="/participant/login"
+                className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+              >
+                Participant portal
+              </Link>
+            </div>
+
             <div className="mt-6 text-center text-sm text-slate-600">
               Already have an account?{" "}
               <Link
@@ -178,7 +196,8 @@ export default function SignupPage() {
               >
                 Log in
               </Link>
-            </div>
+          </div>
+
           </div>
         </div>
       </div>

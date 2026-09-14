@@ -3,6 +3,8 @@ import type {
   TemplateType,
 } from "@/types/certificate";
 import type { DatabaseParticipant } from "@/types/database";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase/client";
 
 import {
   createEvent,
@@ -23,6 +25,8 @@ import {
 import {
   generateCertificateId,
 } from "@/lib/certificate/id";
+
+type SupabaseDatabaseClient = SupabaseClient;
 
 export interface GenerateAndSaveInput {
   eventName: string;
@@ -46,6 +50,7 @@ export interface GenerateAndSaveResult {
 
 export async function generateAndSaveCertificates(
   input: GenerateAndSaveInput,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<GenerateAndSaveResult> {
   if (!input.eventName.trim()) {
     throw new Error("Event name is required.");
@@ -59,17 +64,23 @@ export async function generateAndSaveCertificates(
     throw new Error("No participants available.");
   }
 
-  const event = await createEvent({
-    name: input.eventName,
-    template: input.template,
-    organizerId: input.organizerId,
-  });
+  const event = await createEvent(
+    {
+      name: input.eventName,
+      template: input.template,
+      organizerId: input.organizerId,
+    },
+    client,
+  );
 
   const savedParticipants =
-    await saveParticipants({
-      eventId: event.id,
-      participants: input.participants,
-    });
+    await saveParticipants(
+      {
+        eventId: event.id,
+        participants: input.participants,
+      },
+      client,
+    );
 
   const certificates: GeneratedDatabaseCertificate[] =
     [];
@@ -124,7 +135,7 @@ export async function generateAndSaveCertificates(
     });
   }
 
-  await saveCertificates(certificateRecords);
+  await saveCertificates(certificateRecords, client);
 
   return {
     eventId: event.id,
@@ -141,6 +152,7 @@ export interface GenerateForEventInput {
 
 export async function generateCertificatesForEvent(
   input: GenerateForEventInput,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<GeneratedDatabaseCertificate[]> {
   if (!input.eventId.trim()) {
     throw new Error("Event ID is required.");
@@ -207,7 +219,7 @@ export async function generateCertificatesForEvent(
     });
   }
 
-  await saveCertificates(certificateRecords);
+  await saveCertificates(certificateRecords, client);
 
   return certificates;
 }

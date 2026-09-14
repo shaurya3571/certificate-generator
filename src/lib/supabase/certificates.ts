@@ -1,4 +1,5 @@
  import { supabase } from "@/lib/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type {
   DatabaseCertificate,
@@ -6,6 +7,8 @@ import type {
 import {
   getSupabaseErrorMessage,
 } from "@/lib/supabase/errors";
+
+type SupabaseDatabaseClient = SupabaseClient;
 
 export interface SaveCertificateInput {
   eventId: string;
@@ -18,6 +21,7 @@ export interface SaveCertificateInput {
 
 export async function saveCertificate(
   input: SaveCertificateInput,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<DatabaseCertificate> {
   if (!input.eventId.trim()) {
     throw new Error("Event ID is required.");
@@ -35,7 +39,7 @@ export async function saveCertificate(
     throw new Error("Certificate file name is required.");
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("certificates")
     .insert({
       event_id: input.eventId,
@@ -51,7 +55,12 @@ export async function saveCertificate(
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save certificate.",
+      ),
+    );
   }
 
   return data as DatabaseCertificate;
@@ -67,6 +76,7 @@ export interface SaveCertificateRecord {
 
 export async function saveCertificates(
   records: SaveCertificateRecord[],
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<DatabaseCertificate[]> {
   if (records.length === 0) {
     throw new Error(
@@ -85,13 +95,18 @@ export async function saveCertificates(
       record.emailError ?? null,
   }));
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("certificates")
     .insert(rows)
     .select();
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save certificates.",
+      ),
+    );
   }
 
   return data as DatabaseCertificate[];
@@ -100,8 +115,9 @@ export async function updateCertificateEmailStatus(
   certificateId: string,
   status: "pending" | "sent" | "failed",
   errorMessage: string | null = null,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<DatabaseCertificate> {
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("certificates")
     .update({
       email_status: status,

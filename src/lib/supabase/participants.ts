@@ -1,10 +1,13 @@
 import { supabase } from "@/lib/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Participant } from "@/types/certificate";
 import type { DatabaseParticipant } from "@/types/database";
 import {
   getSupabaseErrorMessage,
 } from "@/lib/supabase/errors";
+
+type SupabaseDatabaseClient = SupabaseClient;
 
 export interface SaveParticipantsInput {
   eventId: string;
@@ -13,6 +16,7 @@ export interface SaveParticipantsInput {
 
 export async function saveParticipants(
   input: SaveParticipantsInput,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<DatabaseParticipant[]> {
   if (input.participants.length === 0) {
     throw new Error("No participants to save.");
@@ -24,31 +28,38 @@ export async function saveParticipants(
     email: participant.email.trim(),
   }));
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("participants")
     .insert(rows)
     .select();
 
   if (error) {
-  throw new Error(
-    getSupabaseErrorMessage(
-      error,
-      "Unable to save participants.",
-    ),
-  );
-}
+    if (error.code === "23505") {
+      throw new Error(
+        "One or more participants already exist for this event.",
+      );
+    }
+
+    throw new Error(
+      getSupabaseErrorMessage(
+        error,
+        "Unable to save participants.",
+      ),
+    );
+  }
 
   return data as DatabaseParticipant[];
 }
 
 export async function getEventParticipants(
   eventId: string,
+  client: SupabaseDatabaseClient = supabase,
 ): Promise<DatabaseParticipant[]> {
   if (!eventId.trim()) {
     throw new Error("Event ID is required.");
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("participants")
     .select("*")
     .eq("event_id", eventId)
