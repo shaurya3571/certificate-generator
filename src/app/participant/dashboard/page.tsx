@@ -128,9 +128,9 @@ export default function ParticipantDashboardPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
+        <header className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-slate-500">
@@ -150,7 +150,7 @@ export default function ParticipantDashboardPage() {
           </div>
         </header>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-slate-500">
@@ -178,7 +178,7 @@ export default function ParticipantDashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           <div className="mb-6">
             <p className="text-sm font-semibold text-slate-500">
               Certificate library
@@ -259,21 +259,28 @@ export default function ParticipantDashboardPage() {
             certificates.length > 0 && (
               <div className="space-y-8">
                 {certificateGroups.map((group) => (
-                  <section key={group.eventId} className="space-y-3">
-                    <h3 className="text-lg font-bold text-slate-950">
+                  <section
+                    key={group.eventId}
+                    aria-labelledby={`event-${group.eventId}`}
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5"
+                  >
+                    <h3
+                      id={`event-${group.eventId}`}
+                      className="break-words text-lg font-bold tracking-tight text-slate-950"
+                    >
                       {group.eventName}
                     </h3>
 
-                    <div className="space-y-3">
+                    <div className="mt-3 space-y-3">
                       {group.certificates.map((certificate) => (
                         <div
                           key={certificate.id}
                           className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between"
                         >
                           <div className="min-w-0">
-                            <h4 className="break-words font-semibold text-slate-950">
+                            <h3 className="min-w-0 break-words text-sm font-semibold text-slate-950">
                               {certificate.file_name}
-                            </h4>
+                            </h3>
 
                             <p className="mt-2 break-all text-xs text-slate-500">
                               Certificate ID: {certificate.certificate_id}
@@ -286,7 +293,7 @@ export default function ParticipantDashboardPage() {
                               handleDownload(certificate)
                             }
                             disabled={downloadingId === certificate.id}
-                            className="shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="w-full shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                           >
                             {downloadingId === certificate.id
                               ? "Preparing..."

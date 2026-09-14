@@ -74,7 +74,7 @@ export function ParticipantPreview({
                   {participant.name}
                 </td>
 
-                <td className="px-5 py-3 text-sm text-gray-600">
+                <td className="break-all px-5 py-3 text-sm text-gray-600">
                   {participant.email}
                 </td>
               </tr>

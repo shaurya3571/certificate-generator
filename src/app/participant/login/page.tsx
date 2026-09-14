@@ -163,7 +163,7 @@ export default function ParticipantLoginPage() {
               Organizer?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-slate-950 underline-offset-4 hover:underline"
+                className="font-semibold text-slate-950 underline-offset-4 transition hover:underline focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
               >
                 Organizer login
               </Link>
