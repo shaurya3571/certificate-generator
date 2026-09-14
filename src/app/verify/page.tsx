@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import PageContainer from "@/components/layout/PageContainer";
+import { getCertificateById } from "@/lib/supabase/verification";
 
 export default function VerifyPage() {
   const [certificateId, setCertificateId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
+  const [certificate, setCertificate] =
+    useState<Awaited<ReturnType<typeof getCertificateById>>>(null);
 
   const handleVerify = async () => {
     const normalizedId = certificateId.trim().toUpperCase();
@@ -23,12 +26,21 @@ export default function VerifyPage() {
     }
 
     setError(null);
+    setCertificate(null);
     setVerifying(true);
 
-    // Certificate lookup will be added in Step 10C.
-    await new Promise((resolve) => setTimeout(resolve, 700));
-
-    setVerifying(false);
+    try {
+      const result = await getCertificateById(normalizedId);
+      setCertificate(result);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unable to verify the certificate.",
+      );
+    } finally {
+      setVerifying(false);
+    }
   };
 
   return (
@@ -98,6 +110,12 @@ export default function VerifyPage() {
           >
             {verifying ? "Verifying..." : "Verify Certificate"}
           </button>
+
+          {certificate && (
+            <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+              Certificate found: {certificate.certificate_id}
+            </div>
+          )}
         </section>
 
         <div className="mt-6 text-center">
